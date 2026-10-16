@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Объект глазами заказчика</title>
+<link rel="stylesheet" href="bro-ui.css">
+<style>
+/* Мобильный вид заказчика 390x844. ?bezel=1 рисует корпус телефона (для hero). */
+body{margin:0;background:#F8F5F0;display:grid;place-items:center;min-height:100vh}
+.phone{width:390px;height:844px;background:var(--page);overflow:hidden;position:relative;display:flex;flex-direction:column}
+.bezel{padding:10px;background:#1E2130;border-radius:56px}
+.bezel .phone{border-radius:46px}
+.m-top{height:96px;padding:44px 16px 0;background:#fff;display:flex;align-items:center;gap:18px;flex:none}
+.m-top .badge{width:40px;height:30px;border-radius:9px;background:#ED1C24;color:#fff;font:italic 800 12px/30px Arial;text-align:center;margin-right:auto}
+.m-body{padding:12px 12px 0;display:flex;flex-direction:column;gap:10px}
+.m-h{background:#fff;border-radius:16px;padding:14px 14px 0}
+.m-h h1{font-size:22px;line-height:28px;font-weight:600}
+.m-h .addr{display:flex;gap:6px;align-items:center;color:var(--muted);font-size:13px;margin:4px 0 10px}
+.m-tabs{display:flex;gap:4px;border-top:1px solid var(--line);margin:0 -14px}
+.m-tabs span{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:40px;font-size:13px;position:relative}
+.m-tabs span.on:after{content:"";position:absolute;left:8px;right:8px;bottom:0;height:2px;background:var(--ink)}
+.m-card{background:#fff;border-radius:16px;padding:14px}
+.m-card h2{font-size:16px;line-height:22px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.m-sum{font-size:28px;line-height:34px;font-weight:600;margin:6px 0 2px}
+.m-sub{color:var(--muted);font-size:13px;display:flex;gap:6px;align-items:center}
+.m-ln{display:flex;align-items:center;gap:8px;height:38px;border-top:1px solid var(--line);font-size:14px}
+.m-ln b{margin-left:auto;font-weight:500}
+.m-ln.tot{font-weight:600}.m-ln.tot b{font-weight:600}
+.m-st{display:flex;align-items:center;gap:10px;height:36px;font-size:14px}
+.m-st i{width:8px;height:8px;border-radius:50%;flex:none}
+.m-st span:last-child{margin-left:auto;font-size:12px;color:var(--muted)}
+.m-st.late span:last-child{color:var(--red)}
+.m-btn{height:48px;border-radius:12px;background:var(--yel);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:16px;margin-top:12px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="data.js"></script>
+<script src="bro-ui.js"></script>
+<script>
+(() => {
+const B = BRO, I = UI.I, T = B.totals, f = n => B.fmt(n) + ' ₽', ic = UI.tIcon;
+const stage = (name, color, note, late) => `<div class="m-st${late ? ' late' : ''}"><i style="background:${color}"></i>${name}<span>${note}</span></div>`;
+const phone = `<div class="phone bro">
+  <div class="m-top"><span class="badge">BRO</span>${I.cart}${I.burger}</div>
+  <div class="m-body">
+    <div class="m-h"><h1>${B.object.name}</h1><div class="addr">${I.pin}ул. Пушкинская, 12, кв. 8</div>
+      <div class="m-tabs"><span class="on">Общее</span><span>${I.table.replace(/18/g, 16)}Сметы</span><span>${I.ctrl.replace(/18/g, 16)}Сроки</span></div></div>
+    <div class="m-card">
+      <div class="m-sub"><span class="pill" style="font-size:11px;padding:0 8px;line-height:18px">${B.estimate.status}</span>Смета «${B.estimate.name}»</div>
+      <div class="m-sum">${f(T.total)}</div>
+      <div class="m-sub">${I.user}Мастер ${B.master}</div>
+      <div style="margin-top:10px">
+        <div class="m-ln">${ic('W')}Работы<b>${f(T.works)}</b></div>
+        <div class="m-ln">${ic('M')}Материалы Петровича<b>${f(T.materials)}</b></div>
+        <div class="m-ln">${ic('O')}Прочее<b>${f(T.other)}</b></div>
+      </div>
+      <div class="m-btn">${I.cart}Материалы в корзину</div>
+    </div>
+    <div class="m-card"><h2>${I.ctrl}Ход работ</h2>
+      ${stage('Демонтаж', 'var(--green)', 'готово')}
+      ${stage('Гидроизоляция пола', 'var(--red)', '+2 дня', true)}
+      ${stage('Плитка', 'var(--bar-wait)', 'с 11 окт')}
+      ${stage('Сантехника', 'var(--bar-wait)', 'с 16 окт')}
+    </div>
+  </div></div>`;
+document.getElementById('root').innerHTML = new URLSearchParams(location.search).has('bezel') ? `<div class="bezel">${phone}</div>` : phone;
+})();
+</script>
+</body>
+</html>
