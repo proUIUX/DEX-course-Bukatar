@@ -26,14 +26,11 @@
 <section class="hero">
   <div class="txt">
     <h1 class="h1 rv">Ремонт и строительство<br>без головной боли</h1>
-    <p class="lead rv" style="transition-delay:.08s">Петрович.BRO берёт на себя рутину: замеры, сметы, план-график<br>и финансы. А заказчик видит результат онлайн</p>
+    <p class="lead rv" style="transition-delay:.08s">Автоматизируйте процессы:<br>замеры, сметы, план-график, финансы, результат заказчику</p>
     <div class="ctas rv" style="transition-delay:.16s"><button class="btn y l" data-reg="signup">Начать бесплатно</button><a class="btn l" href="#features">Как это работает</a></div>
   </div>
   <div class="panel rv" style="transition-delay:.2s">
-    <div class="win">
-      <div class="bar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span class="url">bro.petrovich.ru/objects/kvartira-na-pushkinskoy</span></div>
-      <div class="scr" id="heroScr"></div>
-    </div>
+    <div class="win"><img src="{{img:hero_window}}" alt="Смета в кабинете Петрович.BRO"></div>
     <img class="phone pop" id="heroPhone" src="{{img:phone_client}}" alt="Объект глазами заказчика в приложении">
     <div class="chip pop" data-hero="1" style="left:1254px;top:40px"><span class="ic" style="background:rgba(51,184,107,.15);color:#33B86B">✓</span><div><b>Смета готова</b><small>264 221 ₽, отправлена заказчику</small></div></div>
     <div class="chip pop" data-hero="2" style="left:1204px;top:470px"><span class="ic" style="background:rgba(64,92,217,.15);color:#405CD9">{{i:eye}}</span><div><b>Заказчик открыл смету</b><small>Квартира на Пушкинской, 2 мин назад</small></div></div>
@@ -43,32 +40,23 @@
 
 <section class="who" id="who">
   <p class="t16 m c50 center rv">Для тех, кто ведёт ремонт, и для тех, кто его заказывает</p>
-  <div class="grid">
-    <button class="aud rv" data-go="smeta:0"><img src="{{img:who1}}" alt=""><div><b>Мастера и бригады</b><span>Сметы на замере и несколько объектов без блокнота</span></div></button>
-    <button class="aud rv" style="transition-delay:.06s" data-go="plan:0"><img src="{{img:who2}}" alt=""><div><b>Прорабы и компании</b><span>Работы по команде, сроки и деньги под контролем</span></div></button>
-    <button class="aud rv" style="transition-delay:.12s" data-go="smeta:3"><img src="{{img:who3}}" alt=""><div><b>Сметчики и дизайнеры</b><span>Сметы по шаблонам и цены из каталога Петровича</span></div></button>
-    <button class="aud rv" style="transition-delay:.18s" data-go="client:1"><img src="{{img:who4}}" alt=""><div><b>Заказчики ремонта</b><span>Ход ремонта, сроки и расходы онлайн</span></div></button>
+  <div class="groups">
+    <div class="grp pro rv">
+      <div class="gh"><div><h3 class="h4">Профессионалам</h3><p class="t16 c66">Сметы, сроки, деньги и команда в одном сервисе</p></div><div class="ills"><img src="{{img:who1}}" alt=""><img src="{{img:who2}}" alt=""><img src="{{img:who3}}" alt=""></div></div>
+      <div class="roles"><button class="role" data-go="smeta:0"><span class="ic">{{i:wrench}}</span>Частные мастера</button><button class="role" data-go="plan:0"><span class="ic">{{i:users}}</span>Бригадиры и прорабы</button><button class="role" data-go="plan:1"><span class="ic">{{i:building}}</span>Руководители компаний</button><button class="role" data-go="smeta:3"><span class="ic">{{i:calc}}</span>Сметчики</button><button class="role" data-go="smeta:0"><span class="ic">{{i:pencil}}</span>Архитекторы и дизайнеры</button><button class="role" data-go="client:0"><span class="ic">{{i:chat}}</span>Все, кто организует ремонт</button></div>
+    </div>
+    <div class="grp cli rv" style="transition-delay:.08s">
+      <div class="gh"><h3 class="h4">Заказчикам ремонта</h3><img src="{{img:who4}}" alt=""></div>
+      <p class="body c66">Следите за ремонтом онлайн: смета, сроки, расходы и документы. Бесплатно</p>
+      <div><button class="btn l white" id="invite">Предложить BRO бригаде</button><p class="cap c50" style="margin-top:10px">Скопируем готовое сообщение со ссылкой на сервис</p></div>
+    </div>
   </div>
 </section>
 
-<section class="flow" id="flow">
-  <div class="seg rv" id="seg"><span class="thumb"></span><button data-v="no">Без Петрович.BRO</button><button data-v="yes" class="on">С Петрович.BRO</button></div>
+<section class="pain" id="pain">
   <h2 class="h2 rv">Ремонт тормозит не работа, а рутина</h2>
   <p class="lead rv">Сметы по вечерам, цены вручную, звонки заказчика.<br>С Петрович.BRO рутина делается сама</p>
-  <div class="diag" id="diag">
-    <div class="top"><span class="ic swap" id="dTopIc">✓</span><span class="swap" id="dTop">Смета у заказчика сегодня</span></div>
-    <i class="ln" style="left:863px;top:42px;width:2px;height:50px"></i>
-    <i class="ln draw" style="left:180px;top:92px;width:1368px;height:2px"></i>
-    <i class="ln" style="left:179px;top:92px;width:2px;height:58px"></i><i class="ln" style="left:635px;top:92px;width:2px;height:58px"></i><i class="ln" style="left:1091px;top:92px;width:2px;height:58px"></i><i class="ln" style="left:1547px;top:92px;width:2px;height:58px"></i>
-    <div class="dcard" style="left:0"><span class="ic swap">{{i:check}}</span><div class="swap"><span class="st">Готово</span><b>Смета собрана из шаблона</b><small>Ванная 6 м², 20 позиций</small></div></div>
-    <div class="dcard" style="left:456px"><span class="ic swap">{{i:check}}</span><div class="swap"><span class="st">Готово</span><b>Цены подтянулись</b><small>Материалы из каталога Петровича</small></div></div>
-    <div class="dcard" style="left:912px"><span class="ic swap">{{i:check}}</span><div class="swap"><span class="st">Готово</span><b>Смета отправлена заказчику</b><small>Наценка видна только вам</small></div></div>
-    <div class="dcard" style="left:1368px"><span class="ic swap">{{i:check}}</span><div class="swap"><span class="st">Готово</span><b>Заказчик открыл смету</b><small>Ремонт ванной, 2 мин назад</small></div></div>
-    <div class="ctag" style="left:104px">{{cursor}}<span class="swap" style="left:-110px;background:#FFCC33">Петрович.BRO</span></div>
-    <div class="ctag" style="left:704px">{{cursor}}<span class="swap" style="left:10px;background:#FFCC33">Петрович.BRO</span></div>
-    <div class="ctag" style="left:1033px">{{cursor}}<span class="swap" style="left:-127px;background:#262A3B;color:#fff">Алексей, мастер</span></div>
-    <div class="ctag" style="left:1601px">{{cursor}}<span class="swap" style="left:10px;background:#4580F2;color:#fff">Ирина, заказчик</span></div>
-  </div>
+  <div class="pairs" id="pairs"><div class="pair"><div class="bub"><span class="who dk">Алексей, мастер</span><p>«Заказчику нужна цена сегодня, а на смету уходит весь вечер»</p></div><i class="ln"></i><span class="arr">{{i:down}}</span><i class="ln"></i><button class="sol" data-go="smeta:0"><span class="ic">{{i:calc}}</span><span><small>С Петрович.BRO</small><b>Смета из шаблона и калькулятора</b><em>✓ Готова за 10 минут</em></span></button></div><div class="pair"><div class="bub"><span class="who dk">Сергей, прораб</span><p>«Кто завтра на объекте и что пора докупить?»</p></div><i class="ln"></i><span class="arr">{{i:down}}</span><i class="ln"></i><button class="sol" data-go="plan:0"><span class="ic">{{i:calendar}}</span><span><small>С Петрович.BRO</small><b>План-график со статусами</b><em>✓ Задержки видно сразу</em></span></button></div><div class="pair"><div class="bub"><span class="who dk">Алексей, мастер</span><p>«Заказчик заплатил всё или нет? Я вообще в плюсе?»</p></div><i class="ln"></i><span class="arr">{{i:down}}</span><i class="ln"></i><button class="sol" data-go="plan:1"><span class="ic">{{i:cash}}</span><span><small>С Петрович.BRO</small><b>Финансы по объекту</b><em>✓ Оплаты и прибыль по каждому объекту</em></span></button></div><div class="pair"><div class="bub"><span class="who bl">Ирина, заказчик</span><p>«Что там с ремонтом? Когда закончите?»</p></div><i class="ln"></i><span class="arr">{{i:down}}</span><i class="ln"></i><button class="sol" data-go="client:0"><span class="ic">{{i:eye}}</span><span><small>С Петрович.BRO</small><b>Доступ заказчика к объекту</b><em>✓ Смотрит сам, без звонков</em></span></button></div></div>
 </section>
 
 <section class="feat" id="features">
@@ -109,28 +97,6 @@
     <div class="ph pop" style="left:1164px;top:72px;transition-delay:.16s"><img src="{{img:ph3}}" alt="Закупка материалов в приложении"></div>
     <div class="ph pop" style="left:1424px;top:120px;transition-delay:.24s"><img src="{{img:ph4}}" alt="Вложения в приложении"></div>
   </article>
-</section>
-
-<section class="start">
-  <div class="startc rv" id="startc">
-    <div class="txt">
-      <span class="tagy">3 шага, 5 минут</span>
-      <h2 class="h2 nw">Первая смета уже сегодня</h2>
-      <p class="lead">Без настройки и карты. Сервис бесплатный</p>
-      <div class="steps">
-        <div class="step"><span class="n">1</span>Зарегистрируйтесь<span class="c50">1 минута</span></div>
-        <div class="step"><span class="n">2</span>Соберите смету из шаблона или Excel<span class="c50">3 минуты</span></div>
-        <div class="step"><span class="n">3</span>Отправьте её заказчику<span class="c50">1 клик</span></div>
-      </div>
-      <div style="padding-top:8px"><button class="btn y l" data-reg="signup">Начать бесплатно</button></div>
-    </div>
-    <div class="tk b2"></div><div class="tk b1"></div>
-    <div class="tk main">
-      <div class="cont"><span class="sts">✓&nbsp;&nbsp;Отправлена заказчику</span><span class="tl">Смета на ремонт ванной</span><span class="sum" id="tkSum">264 221 ₽</span><span class="sub">20 позиций, наценка скрыта</span></div>
-      <i class="tear"></i><i class="cut" style="top:-18px"></i><i class="cut" style="top:282px"></i>
-      <div class="stub"><small>Объект</small><b>Кв. на<br>Пушкинской</b></div>
-    </div>
-  </div>
 </section>
 
 <section class="cmp">

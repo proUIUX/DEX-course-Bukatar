@@ -38,45 +38,25 @@ function sceneFrame(name, q) {
   return f;
 }
 
-/* Hero: смета собирается в окне, плашки появляются по очереди */
-const heroScr = $('#heroScr');
-heroScr.appendChild(sceneFrame('extra', 'view=hero&once' + (reduce ? '&state=0' : '')));
+/* Hero: плашки и телефон появляются по очереди */
 (async () => {
   await sleep(reduce ? 0 : 700); $('#heroPhone').classList.add('in');
   for (const n of [1, 2, 3]) { await sleep(reduce ? 0 : 750); const c = $(`[data-hero="${n}"]`); c.classList.add('in'); setTimeout(() => c.classList.add('float'), 700); c.style.animationDelay = n * -1.7 + 's'; }
 })();
-
-/* Без BRO / с BRO */
-const FLOW = {
-  yes: { top: 'Смета у заказчика сегодня', ic: '✓', cards: [['Готово', 'Смета собрана из шаблона', 'Ванная 6 м², 20 позиций'], ['Готово', 'Цены подтянулись', 'Материалы из каталога Петровича'], ['Готово', 'Смета отправлена заказчику', 'Наценка видна только вам'], ['Готово', 'Заказчик открыл смету', 'Ремонт ванной, 2 мин назад']],
-    tags: [['Петрович.BRO', '#FFCC33', '#262A3B'], ['Петрович.BRO', '#FFCC33', '#262A3B'], ['Алексей, мастер', '#262A3B', '#fff'], ['Ирина, заказчик', '#4580F2', '#fff']] },
-  no: { top: 'Смета у заказчика через 3 дня', ic: '!', cards: [['Вечером', 'Смета в Excel с нуля', '3 часа после замера'], ['Вручную', 'Цены с сайтов по одной', '20 позиций, 20 вкладок'], ['Риск', 'Смета в мессенджере', 'Наценку видно в файле'], ['Звонок', '«Когда будет готово?»', 'Заказчик ждёт ответа']],
-    tags: [['Алексей, мастер', '#262A3B', '#fff'], ['Алексей, мастер', '#262A3B', '#fff'], ['Алексей, мастер', '#262A3B', '#fff'], ['Ирина, заказчик', '#4580F2', '#fff']] },
-};
 const ICONS = window.PROTO_ICONS;
-const diag = $('#diag'), seg = $('#seg'), thumb = $('.thumb', seg);
-let flowState = 'yes', flowTouched = false;
-const placeThumb = () => { const b = $('button.on', seg); thumb.style.left = b.offsetLeft + 'px'; thumb.style.width = b.offsetWidth + 'px'; };
-function setFlow(v) {
-  if (v === flowState) return; flowState = v;
-  $$('button', seg).forEach(b => b.classList.toggle('on', b.dataset.v === v)); placeThumb();
-  diag.classList.add('sw');
-  setTimeout(() => {
-    const d = FLOW[v]; diag.classList.toggle('no', v === 'no');
-    $('#dTop').textContent = d.top; $('#dTopIc').textContent = d.ic;
-    $$('.dcard', diag).forEach((c, i) => { const [s, t, sub] = d.cards[i]; $('.st', c).textContent = s; $('b', c).textContent = t; $('small', c).textContent = sub; $('.ic', c).innerHTML = v === 'no' ? ICONS.clock : ICONS.check; });
-    $$('.ctag span', diag).forEach((s, i) => { const [t, bg, col] = d.tags[i]; s.textContent = t; s.style.background = bg; s.style.color = col; });
-    $$('.ctag', diag).forEach((t, i) => t.style.transform = v === 'no' ? `translate(${[60, -40, 30, -50][i]}px,${[8, -4, 6, 4][i]}px)` : 'none');
-    diag.classList.remove('sw');
-  }, 260);
-}
-seg.addEventListener('click', e => { const b = e.target.closest('button'); if (b) { flowTouched = true; setFlow(b.dataset.v); } });
-requestAnimationFrame(placeThumb); addEventListener('resize', placeThumb);
-// При первом показе: сначала «без BRO», через пару секунд «с BRO»
+
+/* Заказчикам: «Предложить BRO бригаде» копирует готовое сообщение со ссылкой */
+const INVITE = 'Давайте вести мой ремонт в Петрович.BRO: там смета, план-график и расходы по объекту, а я смогу следить за ходом работ онлайн. Это бесплатно: https://bro.petrovich.ru';
+$('#invite').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText(INVITE); } catch (e) { const ta = document.createElement('textarea'); ta.value = INVITE; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (_) {} ta.remove(); }
+  toast('Сообщение для бригады скопировано, отправьте его мастеру');
+});
+
+/* Боль → решение: пузыри, стрелка и решение появляются по очереди */
 new IntersectionObserver((es, o) => es.forEach(async e => {
-  if (!e.isIntersecting || reduce) return; o.disconnect();
-  setFlow('no'); await sleep(2600); if (!flowTouched) setFlow('yes');
-}), { threshold: .45 }).observe(diag);
+  if (!e.isIntersecting) return; o.disconnect();
+  for (const p of $$('.pair', e.target)) { p.classList.add('in'); await sleep(reduce ? 0 : 260); }
+}), { threshold: .35 }).observe($('#pairs'));
 
 /* Карточки возможностей: вкладки с автопереключением, под каждой своя сцена */
 const W = 'white', Y = 'ylw';
@@ -148,14 +128,6 @@ $$('[data-go]').forEach(b => b.addEventListener('click', () => {
   c.card.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
   setTimeout(() => c.activate(+i), reduce ? 0 : 500);
 }));
-
-/* Билет: сумма считается при показе */
-const tk = $('#tkSum');
-new IntersectionObserver((es, o) => es.forEach(e => {
-  if (!e.isIntersecting) return; o.disconnect(); if (reduce) return;
-  const to = 264221, t0 = performance.now();
-  (function f(t) { const k = Math.min(1, (t - t0) / 1400), v = Math.round(to * (1 - Math.pow(1 - k, 3))); tk.textContent = v.toLocaleString('ru-RU').replace(/ /g, ' ') + ' ₽'; if (k < 1) requestAnimationFrame(f); })(t0);
-}), { threshold: .5 }).observe($('#startc'));
 
 /* Таблица Excel или BRO: строки отмечаются по очереди */
 new IntersectionObserver((es, o) => es.forEach(async e => {

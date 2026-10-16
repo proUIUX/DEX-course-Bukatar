@@ -30,6 +30,13 @@ ICONS = {
     'calc': svg('<rect x="5" y="2.5" width="14" height="19" rx="2"/><path d="M8.5 6.5h7v3h-7zM8.5 13h.01M12 13h.01M15.5 13h.01M8.5 16.5h.01M12 16.5h.01M15.5 16.5h.01"/>', 22, 1.6),
     'user': svg('<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>', 22, 1.6),
     'sparkles': svg('<path d="M9.5 4l1.6 4.4L15.5 10l-4.4 1.6L9.5 16l-1.6-4.4L3.5 10l4.4-1.6zM17.5 14l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8zM17 3l.6 1.4L19 5l-1.4.6L17 7l-.6-1.4L15 5l1.4-.6z"/>', 22, 1.5),
+    'wrench': svg('<path d="M14.5 6.5a4 4 0 0 0 5 5L11 20a2.1 2.1 0 0 1-3-3zM4 4l4 4M3 7l3-3"/>', 22, 1.6),
+    'users': svg('<circle cx="9" cy="8" r="3.2"/><path d="M3 19.5a6 6 0 0 1 12 0M16 4.8a3.2 3.2 0 0 1 0 6.4M17.5 13.6A6 6 0 0 1 21 19.5"/>', 22, 1.6),
+    'pencil': svg('<path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-4-4L4 16zM13.5 6.5l4 4"/>', 22, 1.6),
+    'chat': svg('<path d="M4 5h11v8H8l-4 3zM15 9h5v8l-3-2.5h-6.5"/>', 22, 1.6),
+    'calendar': svg('<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h2M12 14h2M16 14h.5M8 17h2"/>', 22, 1.6),
+    'cash': svg('<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v5M18 9.5v5"/>', 22, 1.6),
+    'down': svg('<path d="M12 5v14M6 13l6 6 6-6"/>', 20, 2),
     'building': svg('<path d="M4 21V5.5L13 3v18M13 8.5l7 2V21M2.5 21h19M7 8h3M7 11.5h3M7 15h3M16 13.5h1.5M16 17h1.5"/>', 22, 1.6),
 }
 CURSOR = '<svg width="14" height="15" viewBox="0 0 14 15"><path d="M1 1l11.5 6.3-5.3 1.4L4.4 14z" fill="#262A3B" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>'
