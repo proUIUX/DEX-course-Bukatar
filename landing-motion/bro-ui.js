@@ -98,7 +98,7 @@
         <span>${I.tools}${B.object.code}</span><span>${I.bld.replace(/18/g, 16)}${B.object.name}</span>
         <span>${I.pin}${B.object.address}</span><span>${I.truck}${B.object.city}${I.info}</span><span>${I.user}${B.client.name}</span></div>
       <span class="btn" style="position:absolute;right:16px;top:16px">${I.gear}Настройки</span></div>
-    <div class="tabs"><span class="tab${tab === 'est' ? ' on' : ''}">${I.table}Сметы</span><span class="tab${tab === 'plan' ? ' on' : ''}">${I.ctrl}Контроль исполнения</span><span class="tab">${I.money}Финансы</span><span class="tab">${I.clip}Вложения</span></div>`;
+    <div class="tabs"><span class="tab${tab === 'est' ? ' on' : ''}">${I.table}Сметы</span><span class="tab${tab === 'plan' ? ' on' : ''}">${I.ctrl}Контроль исполнения</span><span class="tab${tab === 'fin' ? ' on' : ''}">${I.money}Финансы</span><span class="tab${tab === 'docs' ? ' on' : ''}">${I.clip}Вложения</span></div>`;
 
   const tIcon = t => `<span class="tico ${t}">${t === 'W' ? I.wrench : t === 'M' ? I.cartS : I.box}</span>`;
   const num = n => f(n);
@@ -142,32 +142,50 @@
   /* Сцена: масштаб, курсор, клики, подписи, цикл */
   function scene(root) {
     const wrap = root, st = root.querySelector('.stage');
-    st.insertAdjacentHTML('beforeend', `<svg class="cur" viewBox="0 0 24 24"><path d="M4 2l16 9-7 2-3 7z" fill="#262A3A" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg><div class="ring"></div><div class="cap bro"></div>`);
-    const cur = st.querySelector('.cur'), ring = st.querySelector('.ring'), cap = st.querySelector('.cap');
-    const fit = () => { st.style.transform = `scale(${wrap.clientWidth / 1440})`; };
+    // Параметры: из адреса или из window.__Q (когда сцена встроена в прототип через srcdoc)
+    const params = new URLSearchParams(window.__Q != null ? window.__Q : location.search);
+    const embed = params.has('embed'), zoom = params.has('zoom') ? (+params.get('zoom') || 1.35) : 1;
+    if (embed) document.documentElement.classList.add('embed');
+    st.insertAdjacentHTML('beforeend', `<svg class="cur" viewBox="0 0 24 24"><path d="M4 2l16 9-7 2-3 7z" fill="#262A3A" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg><div class="ring"></div>`);
+    wrap.insertAdjacentHTML('beforeend', '<div class="cap bro"></div>');
+    const cur = st.querySelector('.cur'), ring = st.querySelector('.ring'), cap = wrap.querySelector('.cap');
+    // Камера: масштаб k подгоняет сцену под ширину, z приближает к курсору (только с ?zoom)
+    let k = 1, z = 1, fx = 720, fy = 512;
+    const apply = () => {
+      const s = k * z, W = wrap.clientWidth, H = wrap.clientHeight;
+      const ox = Math.max(0, Math.min(1440 * s - W, fx * s - W / 2)), oy = Math.max(0, Math.min(1024 * s - H, fy * s - H / 2));
+      st.style.transform = `translate(${-ox}px,${-oy}px) scale(${s})`;
+    };
+    const fit = () => { k = wrap.clientWidth / 1440; st.classList.remove('cam'); apply(); cap.style.fontSize = Math.max(12, 24 * k * (embed ? 1.15 : 1)) + 'px'; };
     addEventListener('resize', fit); fit();
+    const camera = (x, y, zz) => { if (zoom === 1) return; fx = x; fy = y; z = zz; st.classList.add('cam'); apply(); };
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const params = new URLSearchParams(location.search);
     let visible = true, cx = 1300, cy = 980;
     new IntersectionObserver(e => { visible = e[0].isIntersecting; }, { threshold: .2 }).observe(wrap);
     const sleep = ms => new Promise(r => setTimeout(r, ms));
     const api = {
-      reduce, params, sleep, cur,
-      at(el, dx = 0, dy = 0) { if (typeof el === 'string') el = st.querySelector(el); const k = wrap.clientWidth / 1440, a = el.getBoundingClientRect(), b = st.getBoundingClientRect(); return [(a.left - b.left) / k + a.width / k / 2 + dx, (a.top - b.top) / k + a.height / k / 2 + dy]; },
+      reduce, params, sleep, cur, embed,
+      at(el, dx = 0, dy = 0) { if (typeof el === 'string') el = st.querySelector(el); const a = el.getBoundingClientRect(), b = st.getBoundingClientRect(), s = b.width / 1440; return [(a.left - b.left) / s + a.width / s / 2 + dx, (a.top - b.top) / s + a.height / s / 2 + dy]; },
       async go(el, ms, dx = 0, dy = 0) { const [x, y] = api.at(el, dx, dy); await api.move(x, y, ms); },
       $: q => st.querySelector(q), $$: q => [...st.querySelectorAll(q)],
-      async move(x, y, ms = 900) { cx = x; cy = y; cur.classList.add('on'); cur.style.transform = `translate(${x}px,${y}px)`; await sleep(ms); },
+      async move(x, y, ms = 900) { cx = x; cy = y; cur.classList.add('on'); cur.style.transform = `translate(${x}px,${y}px)`; camera(x, y, zoom); await sleep(ms); },
       jump(x, y) { cx = x; cy = y; cur.style.transition = 'none'; cur.style.transform = `translate(${x}px,${y}px)`; void cur.offsetWidth; cur.style.transition = ''; },
       async click() { ring.style.left = cx + 'px'; ring.style.top = cy + 'px'; ring.classList.remove('go'); void ring.offsetWidth; ring.classList.add('go'); await sleep(240); },
       caption(n, t) { cap.classList.remove('on'); setTimeout(() => { cap.innerHTML = n ? `<b>${n}</b>${t}` : t; cap.classList.add('on'); }, 160); },
       hideCap() { cap.classList.remove('on'); },
-      hideCur() { cur.classList.remove('on'); },
+      hideCur() { cur.classList.remove('on'); camera(720, 512, 1); },
+      focus(x, y, zz = zoom) { camera(x, y, zz); },
       async type(el, text, ms = 55) { el.textContent = ''; for (const ch of text) { el.textContent += ch; await sleep(ms); } },
       async waitVisible() { while (!visible) await sleep(300); },
-      // ?state=N показывает статичное состояние (для кадров в Figma), ?once=1 играет один раз
+      // ?state=N показывает статичное состояние, ?once=1 играет один раз.
+      // После каждого прохода сцена сообщает родителю (прототип переключает вкладку).
       run(steps, still) {
         if (reduce || params.has('state')) { still(+(params.get('state') || 0)); api.hideCap(); return; }
-        (async () => { do { await steps(); await api.waitVisible(); } while (!params.has('once')); window.__done = true; })();
+        (async () => {
+          do { await steps(); if (parent !== window) parent.postMessage({ type: 'bro-scene-loop', id: params.get('id') }, '*'); await api.waitVisible(); }
+          while (!params.has('once'));
+          window.__done = true;
+        })();
       },
     };
     return api;

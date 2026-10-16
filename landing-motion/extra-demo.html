@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сцены вкладок BRO</title>
+<link rel="stylesheet" href="bro-ui.css">
+<style>
+/* Короткие сцены для вкладок прототипа: ?view=calc|import|markup|finance|acts|docs */
+body{background:#F8F5F0;display:grid;place-items:center;min-height:100vh;padding:24px;margin:0}
+.hlc{transition:background .4s}
+.hlc.on{background:rgba(255,204,51,.28)!important}
+.zero{color:var(--red)}
+.mrow{display:grid;grid-template-columns:1fr 160px;gap:12px;align-items:center;margin-bottom:10px}
+.mrow .fld{justify-content:flex-end}
+.res{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:4px 0 16px}
+.res div{background:var(--page);border-radius:12px;padding:12px 16px}
+.res b{display:block;font-size:24px;line-height:30px;font-weight:600;margin-top:2px}
+.drop{border:2px dashed #C9CBD3;border-radius:12px;height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--muted);margin-top:12px;transition:.3s;position:relative}
+.drop.hot{border-color:var(--yel);background:var(--yel-soft)}
+.file{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line2);border-radius:12px;padding:10px 14px;width:420px;box-shadow:0 10px 30px rgba(38,42,58,.12)}
+.file small{display:block;color:var(--muted);font-size:12px}
+.prog{height:6px;border-radius:6px;background:var(--grey-soft);overflow:hidden;margin-top:6px}
+.prog i{display:block;height:100%;width:0;background:var(--yel);transition:width 1.4s ease-out}
+.fly{position:absolute;z-index:15;transition:transform 1s cubic-bezier(.3,.7,.2,1),opacity .3s}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+.kpi{padding:16px}
+.kpi small{color:var(--muted);font-size:13px;display:block}
+.kpi b{display:block;font-size:26px;line-height:32px;font-weight:600;margin-top:4px}
+.kpi .bar2{height:6px;border-radius:6px;background:var(--grey-soft);margin-top:10px;overflow:hidden}
+.kpi .bar2 i{display:block;height:100%;background:var(--green);transition:width 1.2s ease-out}
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.list{padding:16px}
+.list h3{font-size:18px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.list h3 .btn{margin-left:auto}
+.li{display:grid;grid-template-columns:70px 1fr auto;gap:12px;align-items:center;min-height:52px;border-top:1px solid var(--line);transition:opacity .4s,transform .4s}
+.li small{display:block;color:var(--muted);font-size:12px}
+.li .d{color:var(--muted);font-size:13px}
+.li b{font-weight:600}
+.li.new{opacity:0;transform:translateY(-8px)}
+.plus{color:var(--green)}.minus{color:var(--text)}
+.sub2{display:flex;gap:4px;background:var(--page);border-radius:8px;padding:3px;width:fit-content;margin-bottom:12px}
+.sub2 span{padding:5px 12px;border-radius:6px;font-size:13px}
+.sub2 span.on{background:#fff;font-weight:600}
+.acts .li{grid-template-columns:110px 1fr 160px 200px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;border-radius:6px;padding:2px 8px;width:fit-content}
+.badge.ok{background:var(--green-soft);color:var(--green)}
+.badge.sent{background:var(--blue-soft);color:var(--blue)}
+.files{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.fc{background:#fff;border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;min-height:76px;transition:opacity .4s,transform .4s}
+.fc small{display:block;color:var(--muted);font-size:12px}
+.fc .ic{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--page)}
+.fc.new{opacity:0;transform:scale(.96)}
+.note{background:var(--yel-soft);border-radius:14px;padding:14px;grid-column:span 3;display:flex;gap:10px}
+.thumbs{display:flex;gap:4px}
+.thumbs i{width:30px;height:30px;border-radius:6px;background:linear-gradient(135deg,#D9D3C7,#B9B0A0)}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap"><div class="stage" id="st"></div></div>
+<script src="data.js"></script>
+<script src="bro-ui.js"></script>
+<script>
+(() => {
+const B = BRO, U = UI, I = U.I, T = B.totals, st = document.getElementById('st');
+const Q = new URLSearchParams(window.__Q != null ? window.__Q : location.search);
+const view = Q.get('view') || 'calc';
+const f2 = n => B.fmt(n);
+const count = (el, from, to, ms = 1100, fmt = f2) => new Promise(res => { const t0 = performance.now(); (function tick(t) { const k = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - k, 3); el.textContent = fmt(from + (to - from) * e); k < 1 ? requestAnimationFrame(tick) : res(); })(t0); });
+const shellEst = (tab, inner) => U.shell({ active: 'est', obj: true, est: true }, `${U.crumbs('Объекты', B.object.name, B.estimate.name)}${U.estHead(tab)}${inner}`);
+const estCard = (extraBtn = '', opts = { collapsed: true, open: [2] }) => `<div class="card est"><div class="est-h"><h2>Смета на сумму: <span id="total">${f2(T.total)}</span></h2>${extraBtn}<span class="btn">${I.share}Поделиться</span><span class="btn">${I.dl}Скачать</span></div>${U.estTable('pro', opts)}</div>`;
+const modal = (title, body, w = 560) => `<div class="ov" id="ov"></div><div class="modal bro" id="modal" style="width:${w}px"><h3>${title} ${I.x}</h3>${body}</div>`;
+const toast = t => `<div class="toast bro" id="toast">${I.check}${t}</div>`;
+const rowOf = name => [...st.querySelectorAll('.tbl .row')].find(r => r.textContent.includes(name));
+const cells = r => [...r.children];
+const items = B.sections.flatMap(s => s.items);
+
+let html = '', S, $, reset, play, still;
+
+if (view === 'calc') {
+  /* Калькулятор: размеры помещения превращаются в объёмы позиций */
+  html = shellEst('est', estCard(`<span class="btn" id="bCalc">${I.tools}Калькулятор</span>`) + modal('Калькулятор помещения', `
+    <div class="mrow"><span>Длина, м</span><div class="fld" id="cL"></div></div>
+    <div class="mrow"><span>Ширина, м</span><div class="fld" id="cW"></div></div>
+    <div class="mrow"><span>Высота потолка, м</span><div class="fld" id="cH"></div></div>
+    <div class="res"><div>Площадь пола<b id="rF">0,00 м²</b></div><div>Площадь стен<b id="rW">0,00 м²</b></div></div>
+    <div style="display:flex;justify-content:flex-end;gap:12px"><span class="btn lg">Отменить</span><span class="btn lg y" id="bApply">Подставить в смету</span></div>`) + toast('Объёмы подставлены в 2 позиции'));
+  const R = B.room, targets = [['Укладка плитки на пол', R.floor], ['Укладка плитки на стены', 26]];
+  reset = () => {
+    for (const [n] of targets) { const c = cells(rowOf(n)); c[2].textContent = '0'; c[2].classList.add('zero', 'hlc'); c[5].textContent = '0,00'; c[8].textContent = '0,00'; c[2].classList.remove('on'); }
+    ['cL', 'cW', 'cH'].forEach(id => $('#' + id).textContent = ''); $('#rF').textContent = '0,00 м²'; $('#rW').textContent = '0,00 м²';
+    $('#ov').classList.remove('on'); $('#modal').classList.remove('on'); $('#toast').classList.remove('on');
+  };
+  play = async () => {
+    S.caption('1', 'Введите размеры помещения');
+    await S.go('#bCalc', 900); await S.click(); $('#ov').classList.add('on'); $('#modal').classList.add('on'); await S.sleep(600);
+    for (const [id, v] of [['cL', '2,5'], ['cW', '2,4'], ['cH', '2,65']]) { await S.go('#' + id, 500); await S.click(); await S.type($('#' + id), v, 90); }
+    count($('#rF'), 0, R.floor, 900, n => f2(n) + ' м²'); await count($('#rW'), 0, R.walls, 900, n => f2(n) + ' м²'); await S.sleep(500);
+    S.caption('2', 'Объёмы сами встанут в позиции');
+    await S.go('#bApply', 800); await S.click(); $('#ov').classList.remove('on'); $('#modal').classList.remove('on'); await S.sleep(400);
+    for (const [n, q] of targets) { const it = items.find(i => i.name === n), c = cells(rowOf(n)); c[2].classList.remove('zero'); c[2].classList.add('on'); count(c[2], 0, q, 700, x => String(Math.round(x))); count(c[5], 0, it.costSum); count(c[8], 0, it.sum); }
+    S.hideCur(); $('#toast').classList.add('on'); await S.sleep(2600); S.hideCap(); await S.sleep(500);
+  };
+  still = () => { for (const [n] of targets) cells(rowOf(n))[2].classList.add('hlc', 'on'); };
+}
+
+if (view === 'markup') {
+  /* Наценка: задаётся по типам, цены для заказчика пересчитываются */
+  html = shellEst('est', estCard('', { collapsed: true, open: [1, 2] }) + modal('Наценка на смету', `
+    <div class="mrow"><span style="display:flex;gap:8px;align-items:center">${U.tIcon('W')}Работы, %</span><div class="fld" id="mW"></div></div>
+    <div class="mrow"><span style="display:flex;gap:8px;align-items:center">${U.tIcon('M')}Материалы, %</span><div class="fld" id="mM"></div></div>
+    <div class="mrow"><span style="display:flex;gap:8px;align-items:center">${U.tIcon('O')}Прочее, %</span><div class="fld">0</div></div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:16px"><span class="btn lg">Отменить</span><span class="btn lg y" id="bApply">Применить</span></div>`, 520)
+    + `<div class="chip" id="chip" style="left:440px;top:218px"><span class="dot">${I.check}</span>Прибыль по смете ${f2(T.profit)} ₽</div>`);
+  const rows = () => [...st.querySelectorAll('.tbl .row')];
+  const byRow = r => items.find(i => r.textContent.includes(i.name));
+  reset = () => {
+    rows().forEach(r => { const it = byRow(r), c = cells(r); c[6].textContent = '0,00 %'; c[7].textContent = f2(it.cost); c[8].textContent = f2(it.costSum); c[6].classList.add('hlc'); c[6].classList.remove('on'); });
+    st.querySelectorAll('.tbl .sub').forEach((r, i) => { const c = cells(r); c[c.length - 1].textContent = f2(B.sections[i].costSum); });
+    st.querySelector('.tbl .sec').lastElementChild.textContent = f2(T.cost); $('#total').textContent = f2(T.cost);
+    $('#mW').textContent = '0'; $('#mM').textContent = '0';
+    $('#ov').classList.remove('on'); $('#modal').classList.remove('on'); $('#chip').classList.remove('on');
+  };
+  play = async () => {
+    S.caption('1', 'Задайте наценку на работы и материалы');
+    await S.go('.head .btn', 900); await S.click(); $('#ov').classList.add('on'); $('#modal').classList.add('on'); await S.sleep(600);
+    await S.go('#mW', 600); await S.click(); await S.type($('#mW'), '15', 120);
+    await S.go('#mM', 500); await S.click(); await S.type($('#mM'), '10', 120);
+    await S.go('#bApply', 700); await S.click(); $('#ov').classList.remove('on'); $('#modal').classList.remove('on');
+    S.caption('2', 'Цены для заказчика пересчитаются');
+    S.hideCur();
+    rows().forEach(r => { const it = byRow(r), c = cells(r); c[6].textContent = it.markup + ',00 %'; c[6].classList.add('on'); count(c[7], it.cost, it.price); count(c[8], it.costSum, it.sum); });
+    st.querySelectorAll('.tbl .sub').forEach((r, i) => { const c = cells(r); count(c[c.length - 1], B.sections[i].costSum, B.sections[i].sum); });
+    count(st.querySelector('.tbl .sec').lastElementChild, T.cost, T.total); await count($('#total'), T.cost, T.total, 1300);
+    $('#chip').classList.add('on'); await S.sleep(2600); S.hideCap(); await S.sleep(500);
+  };
+  still = () => { $('#chip').classList.add('on'); };
+}
+
+if (view === 'import') {
+  /* Импорт: смета из Excel за одно перетаскивание */
+  html = U.shell({ active: 'all' }, `<div class="create" style="margin-top:40px">
+    <h1>Создание</h1>
+    <div class="card"><h2>${I.bld.replace(/18/g, 26)}Объект</h2>
+      <div class="g2"><div><div class="lbl">Название объекта <i>*</i></div><div class="fld">${B.object.name}</div></div>
+      <div><div class="lbl">Город поставки товара <i>*</i></div><div class="fld">${B.object.city}<span class="dd">${I.tri}</span></div></div></div></div>
+    <div class="card"><h2>${I.table.replace(/18/g, 26)}Смета</h2>
+      <div class="lbl">Название сметы <i>*</i></div><div class="fld">${B.estimate.name}</div>
+      <div class="opts">
+        <div class="opt"><span class="rad"></span><div><b>Смета пустая</b>Вносите позиции вручную</div></div>
+        <div class="opt"><span class="rad"></span><div><b>Смета из шаблона</b>Готовый или системный шаблон</div></div>
+        <div class="opt" id="oFile"><span class="rad y"></span><div><b>Смета из файла</b>Заполните Excel по образцу</div></div>
+      </div>
+      <div class="drop" id="drop">${I.dl.replace('M12 4v11M7 10l5 5 5-5', 'M12 15V4M7 9l5-5 5 5')}<span id="dropT">Перетащите файл .xlsx или выберите на компьютере</span><div class="prog" style="width:260px;display:none" id="prog"><i></i></div></div>
+    </div>
+    <div class="card foot"><span class="btn lg">${I.arrowL}Отменить</span><span class="btn lg y" id="bCreate">${I.check}Создать смету и объект</span></div>
+  </div>
+  <div class="fly" id="fly" style="left:1000px;top:880px;opacity:0"><div class="file">${I.xls}<div>Ремонт ванной.xlsx<small>48 КБ</small></div></div></div>
+  ${toast('Смета создана: 20 позиций, 4 раздела')}`);
+  reset = () => {
+    $('#oFile').classList.remove('on'); $('#oFile .rad').classList.remove('on'); $('#drop').classList.remove('hot');
+    $('#dropT').textContent = 'Перетащите файл .xlsx или выберите на компьютере'; $('#prog').style.display = 'none'; $('#prog i').style.width = '0';
+    const fl = $('#fly'); fl.style.transition = 'none'; fl.style.transform = 'none'; fl.style.opacity = 0; void fl.offsetWidth; fl.style.transition = ''; $('#toast').classList.remove('on');
+  };
+  play = async () => {
+    S.caption('1', 'Выберите смету из файла');
+    await S.go('#oFile', 900, -80); await S.click(); $('#oFile').classList.add('on'); $('#oFile .rad').classList.add('on'); await S.sleep(500);
+    S.caption('2', 'Перетащите Excel, позиции перенесутся');
+    const [dx, dy] = S.at('#drop'); const fl = $('#fly');
+    S.jump(1010, 900); await S.move(1010, 900, 400); fl.style.opacity = 1; await S.sleep(300);
+    fl.style.transform = `translate(${dx - 1000 - 210}px,${dy - 880 - 30}px)`; S.move(dx, dy + 10, 1000); $('#drop').classList.add('hot'); await S.sleep(1100);
+    fl.style.opacity = 0; $('#dropT').textContent = 'Ремонт ванной.xlsx'; $('#prog').style.display = 'block'; await S.sleep(50); $('#prog i').style.width = '100%'; await S.sleep(1500);
+    $('#dropT').textContent = 'Найдено 20 позиций в 4 разделах'; $('#drop').classList.remove('hot');
+    await S.go('#bCreate', 800); await S.click(); $('#toast').classList.add('on'); S.hideCur(); await S.sleep(2400); S.hideCap(); await S.sleep(500);
+  };
+  still = () => { $('#oFile').classList.add('on'); $('#oFile .rad').classList.add('on'); $('#dropT').textContent = 'Найдено 20 позиций в 4 разделах'; };
+}
+
+if (view === 'finance') {
+  /* Финансы: оплаты заказчика и расходы по объекту */
+  const F = B.finance, paid0 = F.payments[0].sum, paidAll = F.payments.reduce((a, p) => a + p.sum, 0), exp = F.expenses.reduce((a, p) => a + p.sum, 0);
+  const li = (p, sign, cls = '') => `<div class="li ${cls}"><span class="d">${p.d}</span><span>${p.n}${p.who ? `<small>${p.who}</small>` : ''}</span><b class="${sign === '+' ? 'plus' : 'minus'}">${sign}${f2(p.sum)} ₽</b></div>`;
+  html = shellEst('fin', `
+    <div class="kpis">
+      <div class="card kpi"><small>Сумма смет</small><b>${f2(T.total)} ₽</b></div>
+      <div class="card kpi"><small>Оплачено заказчиком</small><b id="kPaid">${f2(paid0)} ₽</b><div class="bar2"><i id="kBar" style="width:${paid0 / T.total * 100}%"></i></div></div>
+      <div class="card kpi"><small>Осталось получить</small><b id="kLeft">${f2(T.total - paid0)} ₽</b></div>
+      <div class="card kpi"><small>Расходы по объекту</small><b>${f2(exp)} ₽</b></div>
+    </div>
+    <div class="lists">
+      <div class="card list"><h3>Поступления<span class="btn y" id="bPay">${I.plus}Добавить оплату</span></h3><div id="pays">${li(F.payments[0], '+')}${li(F.payments[1], '+', 'new')}</div></div>
+      <div class="card list"><h3>Расходы</h3>${F.expenses.map(p => li(p, '−')).join('')}</div>
+    </div>` + modal('Новая оплата', `
+    <div class="mrow"><span>Сумма, ₽</span><div class="fld" id="pSum"></div></div>
+    <div class="mrow"><span>Плательщик</span><div class="fld">${B.client.name}<span class="dd">${I.tri}</span></div></div>
+    <div class="mrow"><span>Назначение</span><div class="fld" style="justify-content:flex-start">Оплата за материалы</div></div>
+    <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:16px"><span class="btn lg">Отменить</span><span class="btn lg y" id="bSave">Сохранить</span></div>`, 520));
+  reset = () => { $('#pays .li.new').classList.add('new'); $('#kPaid').textContent = f2(paid0) + ' ₽'; $('#kLeft').textContent = f2(T.total - paid0) + ' ₽'; $('#kBar').style.width = paid0 / T.total * 100 + '%'; $('#pSum').textContent = ''; $('#ov').classList.remove('on'); $('#modal').classList.remove('on'); };
+  play = async () => {
+    S.caption('1', 'Отмечайте оплаты заказчика');
+    await S.go('#bPay', 900); await S.click(); $('#ov').classList.add('on'); $('#modal').classList.add('on'); await S.sleep(500);
+    await S.go('#pSum', 600); await S.click(); await S.type($('#pSum'), '50 000', 90);
+    await S.go('#bSave', 700); await S.click(); $('#ov').classList.remove('on'); $('#modal').classList.remove('on'); await S.sleep(300);
+    S.caption('2', 'Видно, сколько осталось получить'); S.hideCur();
+    st.querySelector('#pays .li:last-child').classList.remove('new');
+    count($('#kPaid'), paid0, paidAll, 1100, n => f2(n) + ' ₽'); count($('#kLeft'), T.total - paid0, T.total - paidAll, 1100, n => f2(n) + ' ₽'); $('#kBar').style.width = paidAll / T.total * 100 + '%';
+    await S.sleep(3000); S.hideCap(); await S.sleep(500);
+  };
+  still = () => { st.querySelector('#pays .li:last-child').classList.remove('new'); $('#kPaid').textContent = f2(paidAll) + ' ₽'; $('#kLeft').textContent = f2(T.total - paidAll) + ' ₽'; $('#kBar').style.width = paidAll / T.total * 100 + '%'; };
+}
+
+if (view === 'acts') {
+  /* Акты: собираются из выполненных работ сметы */
+  const A = B.acts;
+  const li = (a, cls = '') => `<div class="li ${cls}"><b>${a.n}</b><span>${a.w}<small>от ${a.d}, ${B.estimate.name}</small></span><b style="text-align:right">${f2(a.sum)} ₽</b><span class="badge ${a.st.startsWith('Подписан') ? 'ok' : 'sent'}">${a.st.startsWith('Подписан') ? I.check.replace(/18/g, 12) : I.clock.replace(/14/g, 12)}${a.st}</span></div>`;
+  html = shellEst('plan', `<div class="sub2"><span>План-график</span><span class="on">Акты</span></div>
+    <div class="card list acts"><h3>Акты выполненных работ<span class="btn y" id="bAct">${I.plus}Сформировать акт</span></h3><div id="acts">${li(A[0])}${li(A[1], 'new')}</div></div>
+    <div class="card list" style="margin-top:12px"><h3>Выполнено по смете</h3>
+      <div class="li"><span class="d">05-06 окт</span><span>Демонтаж<small>3 позиции</small></span><span class="badge ok">${I.check.replace(/18/g, 12)}В акте 1</span></div>
+      <div class="li"><span class="d">07-10 окт</span><span>Гидроизоляция<small>4 позиции</small></span><span class="badge" id="gStat" style="background:var(--yel-soft)">Готово, без акта</span></div>
+    </div>` + toast('Акт 2 сформирован и отправлен заказчику'));
+  reset = () => { $('#acts .li:last-child').classList.add('new'); $('#gStat').className = 'badge'; $('#gStat').style.background = 'var(--yel-soft)'; $('#gStat').textContent = 'Готово, без акта'; $('#toast').classList.remove('on'); };
+  play = async () => {
+    S.caption('', 'Акт собирается из выполненных работ');
+    await S.go('#gStat', 1000); await S.sleep(400);
+    await S.go('#bAct', 900); await S.click(); await S.sleep(300);
+    $('#acts .li:last-child').classList.remove('new'); $('#gStat').className = 'badge ok'; $('#gStat').style.background = ''; $('#gStat').innerHTML = I.check.replace(/18/g, 12) + 'В акте 2';
+    $('#toast').classList.add('on'); S.hideCur(); await S.sleep(3000); S.hideCap(); await S.sleep(500);
+  };
+  still = () => { $('#acts .li:last-child').classList.remove('new'); };
+}
+
+if (view === 'docs') {
+  /* Вложения: документы и фото в карточке объекта, их видит и заказчик */
+  const ico = t => t === 'pdf' ? I.pdf : t === 'img' ? `<span style="color:#6E77A8">${I.clip}</span>` : '<span class="thumbs"><i></i></span>';
+  const fc = (d, cls = '') => `<div class="fc ${cls}"><span class="ic">${ico(d.t)}</span><div>${d.n}<small>${d.s}, ${d.d}</small></div></div>`;
+  html = shellEst('docs', `<div class="files" id="files">
+      ${B.docs.map(d => fc(d)).join('')}
+      ${fc({ n: 'Фото гидроизоляции', t: 'photos', s: '4 фото', d: '10 окт' }, 'new')}
+      <div class="fc"><span class="ic">${I.plus}</span><div>Добавить файл<small>PDF, фото, Excel</small></div></div>
+      <div class="note"><span>${I.info}</span><div><b>Заметка для заказчика</b><br>Плитку 30×60 привезли 9 октября, укладку начинаем 11 октября</div></div>
+    </div>
+    <div class="fly" id="fly" style="left:1040px;top:880px;opacity:0"><div class="file"><span class="thumbs"><i></i><i></i><i></i></span><div>Фото гидроизоляции<small>4 фото</small></div></div></div>
+    <div class="chip" id="chip" style="right:40px;top:470px"><span class="dot">${I.eye}</span>Заказчик тоже видит вложения</div>`);
+  reset = () => { $('#files .fc.new, #files .fc:nth-child(5)').classList.add('new'); const fl = $('#fly'); fl.style.transition = 'none'; fl.style.transform = 'none'; fl.style.opacity = 0; void fl.offsetWidth; fl.style.transition = ''; $('#chip').classList.remove('on'); };
+  play = async () => {
+    S.caption('', 'Документы и фото в карточке объекта');
+    S.jump(1060, 900); await S.move(1060, 900, 400); const fl = $('#fly'); fl.style.opacity = 1; await S.sleep(300);
+    const [x, y] = S.at('#files .fc:nth-child(5)'); fl.style.transform = `translate(${x - 1040 - 210}px,${y - 880 - 30}px)`; S.move(x, y, 1000); await S.sleep(1100);
+    fl.style.opacity = 0; $('#files .fc:nth-child(5)').classList.remove('new'); S.hideCur(); await S.sleep(700);
+    $('#chip').classList.add('on'); await S.sleep(2800); S.hideCap(); await S.sleep(500);
+  };
+  still = () => { $('#files .fc:nth-child(5)').classList.remove('new'); $('#chip').classList.add('on'); };
+}
+
+if (view === 'hero') {
+  /* Окно hero: смета собирается построчно, итог считается */
+  html = shellEst('est', estCard('', { collapsed: true, open: [0, 1, 2] }));
+  const rows = () => [...st.querySelectorAll('.tbl .row, .tbl .sub')];
+  reset = () => { rows().forEach(r => [...r.children].forEach(c => { c.style.transition = 'none'; c.style.opacity = 0; })); $('#total').textContent = '0,00'; };
+  play = async () => {
+    S.hideCur();
+    rows().forEach((r, i) => setTimeout(() => [...r.children].forEach(c => { c.style.transition = 'opacity .4s ease-out'; c.style.opacity = 1; }), 200 + i * 70));
+    await count($('#total'), 0, T.total, 1600); await S.sleep(5000);
+  };
+  still = () => {};
+}
+
+st.innerHTML = html;
+const flyEl = st.querySelector('#fly'); if (flyEl) st.appendChild(flyEl); // координаты полёта в системе сцены
+S = U.scene(document.getElementById('wrap')); $ = S.$;
+S.run(async () => { reset(); S.jump(1300, 980); await S.sleep(500); await play(); }, () => still());
+})();
+</script>
+</body>
+</html>

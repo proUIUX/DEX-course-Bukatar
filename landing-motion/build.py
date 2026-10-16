@@ -9,7 +9,7 @@
 import argparse, base64, pathlib, re
 
 HERE = pathlib.Path(__file__).resolve().parent
-SCENES = ['smeta-demo.html', 'plan-demo.html', 'client-demo.html']
+SCENES = ['smeta-demo.html', 'plan-demo.html', 'client-demo.html', 'extra-demo.html']
 WEIGHTS = {'Regular': 400, 'Medium': 500, 'Semibold': 600, 'Bold': 700}
 
 
