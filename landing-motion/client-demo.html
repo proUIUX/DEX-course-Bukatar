@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Смета для заказчика</title>
+<link rel="stylesheet" href="bro-ui.css">
+<style>
+body{background:#F8F5F0;display:grid;place-items:center;min-height:100vh;padding:24px;margin:0}
+.cli{display:flex;align-items:center;gap:12px}
+.cli .av{width:40px;height:40px;border-radius:50%;background:#E8EBF8;display:grid;place-items:center;font-weight:600;color:#4A56A0}
+.cli small{display:block;color:var(--muted);font-size:13px}
+.cli .tag{margin-left:auto;font-size:12px;border-radius:6px;padding:2px 8px;background:var(--grey-soft);transition:.3s}
+.cli .tag.ok{background:var(--green-soft);color:var(--green)}
+.tg{width:36px;height:20px;border-radius:20px;background:#C9CBD3;position:relative;flex:none}
+.tg:after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+.tg.on{background:var(--ink)}.tg.on:after{left:18px}
+.vis{display:flex;align-items:center;gap:10px;height:34px}
+.vis span:nth-child(2){flex:1}
+.vis .lk{color:var(--muted);display:flex;gap:4px;align-items:center;font-size:12px}
+.pub .content{padding-top:24px}
+.pub .tbl .row .cart{opacity:0;transform:scale(.6);transition:.3s}
+.pub.carts .tbl .row .cart{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap"><div class="stage" id="st"></div></div>
+<script src="data.js"></script>
+<script src="bro-ui.js"></script>
+<script>
+(() => {
+const B = BRO, U = UI, I = U.I, st = document.getElementById('st'), T = B.totals;
+const link = 'bro.petrovich.ru/estimates/' + Math.round(T.total);
+
+/* Экран 1. Смета исполнителя и окно «Поделиться» */
+const pro = U.shell({ active: 'est', obj: true, est: true }, `
+  ${U.crumbs('Объекты', B.object.name, B.estimate.name)}
+  ${U.estHead()}
+  <div class="card est">
+    <div class="est-h"><h2>Смета на сумму: ${B.fmt(T.total)}</h2><span class="btn" id="bShare">${I.share}Поделиться</span><span class="btn">${I.dl}Скачать</span></div>
+    ${U.estTable('pro', { collapsed: true, open: [0, 1, 2] })}
+  </div>
+  <div class="ov" id="ov"></div>
+  <div class="modal bro" id="modal" style="width:640px">
+    <h3>Поделиться сметой ${I.x}</h3>
+    <div class="box"><h4>Заказчик</h4>
+      <div class="cli"><span class="av">ИС</span><div>${B.client.name}<small>${B.client.phone}</small></div><span class="tag" id="tag">Не приглашён</span><span class="btn y" id="bInv">Пригласить</span></div></div>
+    <div class="box"><h4>Что увидит заказчик</h4>
+      <div class="vis"><span class="tg on"></span><span>Позиции, количество и итог</span></div>
+      <div class="vis"><span class="tg"></span><span>Себестоимость и наценка</span><span class="lk">${I.lock}только у вас</span></div></div>
+    <div class="lbl">Ссылка на смету</div>
+    <div style="display:flex;gap:8px"><div class="fld" style="flex:1">${I.link}${link}</div><span class="btn dark" id="bCopy">Копировать</span></div>
+  </div>
+  <div class="toast bro" id="toast">${I.check}Ссылка скопирована</div>`);
+
+/* Экран 2. Публичный вид сметы для заказчика (bro.petrovich.ru/estimates/…) */
+const pub = `<div class="pub bro" id="pub">
+  <header class="top"><span class="logo">${U.logo(false)}</span><span class="ic">${I.apps}</span><span class="ava" style="width:40px;height:40px;font-size:14px;background:#E8EBF8;color:#4A56A0">ИС</span></header>
+  <div class="content">
+    ${U.crumbs('Объекты', B.object.name, B.estimate.name)}
+    <div class="card head"><h1>${B.estimate.name}</h1>
+      <div class="meta"><span class="pill" style="padding:2px 12px;font-size:12px">${B.estimate.status}</span><span>${I.pin}${B.object.address}</span><span>${I.truck}${B.object.city}${I.info}</span></div></div>
+    <div class="card est"><div class="est-h"><h2>Смета на сумму: ${B.fmt(T.total)}</h2></div>
+      ${U.estTable('client', { collapsed: true, open: [0, 1, 2] })}</div>
+  </div>
+  <div class="chip" id="chip" style="right:40px;top:150px"><span class="dot">${I.eye}</span>Наценку видите только вы</div>
+  <div class="chip" id="chip2" style="right:40px;top:206px;background:var(--yel);color:var(--ink)"><span class="dot" style="background:#fff">${I.cartS}</span>Материалы в корзину Петровича</div>
+</div>`;
+
+st.innerHTML = `<div class="scr" id="sPro">${pro}</div><div class="scr" id="sPub">${pub}</div>`;
+const S = U.scene(document.getElementById('wrap'));
+const $ = S.$, show = id => S.$$('.scr').forEach(n => n.classList.toggle('on', n.id === id));
+const modal = on => { $('#ov').classList.toggle('on', on); $('#modal').classList.toggle('on', on); };
+function invited(on) {
+  $('#tag').classList.toggle('ok', on); $('#tag').innerHTML = on ? 'Приглашение отправлено' : 'Не приглашён';
+  $('#bInv').style.display = on ? 'none' : '';
+}
+function reset() { modal(false); invited(false); $('#toast').classList.remove('on'); $('#chip').classList.remove('on'); $('#chip2').classList.remove('on'); $('#pub').classList.remove('carts'); }
+
+S.run(async () => {
+  reset(); show('sPro'); S.jump(1300, 980); await S.sleep(500);
+  S.caption('1', 'Пригласите заказчика в смету');
+  await S.go('#bShare', 900); await S.click(); modal(true); await S.sleep(900);
+  await S.go('#bInv', 800); await S.click(); invited(true); await S.sleep(900);
+  S.caption('2', 'Себестоимость и наценка скрыты');
+  await S.go('.vis:nth-child(3) .tg', 800); await S.sleep(1400);
+  await S.go('#bCopy', 700); await S.click(); $('#toast').classList.add('on'); await S.sleep(1200);
+  S.hideCur(); S.caption('3', 'Заказчик видит понятную смету');
+  show('sPub'); await S.sleep(900); $('#chip').classList.add('on'); await S.sleep(1300);
+  $('#pub').classList.add('carts'); $('#chip2').classList.add('on'); await S.sleep(2600);
+  S.hideCap(); await S.sleep(600);
+}, n => {
+  // 0 вид заказчика, 1 окно «Поделиться»
+  if (n === 1) { show('sPro'); modal(true); invited(true); return; }
+  show('sPub'); $('#chip').classList.add('on'); $('#chip2').classList.add('on'); $('#pub').classList.add('carts');
+});
+})();
+</script>
+</body>
+</html>

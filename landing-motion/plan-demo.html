@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>План-график ремонта</title>
+<link rel="stylesheet" href="bro-ui.css">
+<style>
+body{background:#F8F5F0;display:grid;place-items:center;min-height:100vh;padding:24px;margin:0}
+.bar{transition:transform .55s cubic-bezier(.2,.8,.2,1),left .8s cubic-bezier(.4,0,.2,1),width .9s cubic-bezier(.2,.8,.2,1),background .3s}
+.bar.pre{transform:scaleX(0)}
+.bar .done{transition:width 2.2s linear}
+.bar .late{transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.now{transition:left 2.2s linear}
+.wr .per{transition:color .3s}
+.wr.hl{background:rgba(235,87,87,.06)}
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap"><div class="stage" id="st"></div></div>
+<script src="data.js"></script>
+<script src="bro-ui.js"></script>
+<script>
+(() => {
+const B = BRO, U = UI, I = U.I, P = B.plan, st = document.getElementById('st');
+const days = P.to - P.from + 1, DW = (1132 - 440) / days; // ширина контента 1132, колонка работ 440
+const dd = d => String(d).padStart(2, '0') + ' окт';
+const ST = { done: 'Готово', work: 'В работе', wait: 'Ожидает' };
+const works = P.groups.flatMap(g => g.works);
+const SHIFT = { '3.1': 2, '3.2': 2 }; // работы, которые сдвигает задержка гидроизоляции
+const id = w => w.n.split(' ')[0];
+
+let left = '', lines = '';
+P.groups.forEach(g => {
+  left += `<div class="gr">${g.name}</div>`; lines += `<div class="ln g"></div>`;
+  g.works.forEach(w => {
+    const k = id(w);
+    left += `<div class="wr" data-w="${k}"><span>${w.n}</span><span class="st ${w.st}">${ST[w.st]}${I.down.replace(/16/g, 12)}</span><span class="per">${dd(w.s)} - ${dd(w.e)}</span></div>`;
+    lines += `<div class="ln" data-w="${k}"><div class="bar pre st-${w.st}" style="left:${(w.s - P.from) * DW + 3}px;width:${(w.e - w.s + 1) * DW - 6}px">${w.st === 'work' ? '<i class="done"></i>' : ''}${w.delay ? '<i class="late" style="width:0"></i>' : ''}</div>${w.delay ? `<span class="delay" style="left:${(w.e + w.delay - P.from + 1) * DW + 6}px">+${w.delay} дня</span>` : ''}</div>`;
+  });
+});
+const head = `<div class="ph"><span>Работы</span><span>Статус</span><span>Период</span></div>`;
+const daysRow = Array.from({ length: days }, (_, i) => `<span class="${P.from + i === P.today ? 'today' : ''}" data-d="${P.from + i}">${String(P.from + i).padStart(2, '0')}</span>`).join('');
+
+st.innerHTML = U.shell({ active: 'est', obj: true, est: true }, `
+  ${U.crumbs('Объекты', B.object.name, B.estimate.name)}
+  ${U.estHead('plan')}
+  <div class="card ctrl"><span class="seg2"><span class="on">Дни</span><span>Недели</span><span>Месяцы</span></span>
+    <span class="warn" id="warn">${I.clock}Есть задержки по <u>1 работе</u></span>
+    <span class="search">${I.search}Поиск по работам</span></div>
+  <div class="card plan">
+    <div class="left">${head}${left}</div>
+    <div class="chart" id="chart">
+      <div class="mon">${P.month}</div>
+      <div class="days" style="grid-template-columns:repeat(${days},1fr)">${daysRow}</div>
+      <div class="grid" style="grid-template-columns:repeat(${days},1fr)">${'<i></i>'.repeat(days)}</div>
+      <div class="now" id="now"></div>
+      <div class="lines">${lines}</div>
+    </div>
+  </div>`);
+
+const S = U.scene(document.getElementById('wrap'));
+const $ = S.$, row = k => $(`.wr[data-w="${k}"]`), bar = k => $(`.ln[data-w="${k}"] .bar`);
+const nowX = d => (d - P.from + .5) * DW - 1;
+const W21 = works.find(w => w.delay);
+
+function setStatus(k, s) { const el = row(k).querySelector('.st'); el.className = 'st ' + s; el.innerHTML = ST[s] + I.down.replace(/16/g, 12); const b = bar(k); b.classList.remove('st-done', 'st-wait', 'st-work'); b.classList.add('st-' + s); if (s === 'work' && !b.querySelector('.done')) b.insertAdjacentHTML('afterbegin', '<i class="done" style="width:0"></i>'); }
+function setNow(d, instant) { const n = $('#now'); if (instant) { n.style.transition = 'none'; } n.style.left = nowX(d) + 'px'; if (instant) { void n.offsetWidth; n.style.transition = ''; } S.$$('.days span').forEach(s => s.classList.toggle('today', +s.dataset.d === Math.round(d))); }
+function shift(on, instant) {
+  for (const k in SHIFT) { const w = works.find(x => id(x) === k), off = on ? 0 : -SHIFT[k], b = bar(k);
+    if (instant) b.style.transition = 'none'; b.style.left = (w.s + off - P.from) * DW + 3 + 'px'; if (instant) { void b.offsetWidth; b.style.transition = ''; }
+    row(k).querySelector('.per').textContent = `${dd(w.s + off)} - ${dd(w.e + off)}`; }
+}
+function delay(on) {
+  const b = bar('2.1'), late = b.querySelector('.late'), full = (W21.e - W21.s + 1 + W21.delay) * DW - 6;
+  b.style.width = (on ? full : (W21.e - W21.s + 1) * DW - 6) + 'px';
+  late.style.left = (W21.e - W21.s + 1) * DW - 3 + 'px'; late.style.width = on ? W21.delay * DW - 3 + 'px' : '0';
+  $('.delay').classList.toggle('on', on); $('#warn').classList.toggle('on', on); row('2.1').classList.toggle('hl', on);
+  const per = row('2.1').querySelector('.per'); per.classList.toggle('late', on);
+  per.innerHTML = on ? `${dd(W21.s)} - ${dd(W21.e + W21.delay)} ${I.warn}` : `${dd(W21.s)} - ${dd(W21.e)}`;
+}
+function reset() {
+  S.$$('.bar').forEach(b => b.classList.add('pre'));
+  works.forEach(w => setStatus(id(w), 'wait'));
+  S.$$('.bar .done').forEach(d => { d.style.transition = 'none'; d.style.width = '0'; void d.offsetWidth; d.style.transition = ''; });
+  setNow(P.from, true); shift(false, true); delay(false);
+}
+function doneTo(d) { // заливка факта до линии «сегодня»
+  works.forEach(w => { const b = bar(id(w)).querySelector('.done'); if (b) b.style.width = Math.max(0, Math.min(w.e, d) - w.s + (d >= w.s ? .5 : 0)) * DW + 'px'; });
+}
+
+S.run(async () => {
+  reset(); S.jump(1300, 980); await S.sleep(500);
+  S.caption('1', 'Работы из сметы сами встают в график');
+  for (const [i, w] of works.entries()) setTimeout(() => bar(id(w)).classList.remove('pre'), i * 140);
+  await S.sleep(works.length * 140 + 900);
+  S.caption('2', 'Отмечайте, что уже сделано');
+  for (const k of ['1.1', '1.2']) { await S.go(row(k).querySelector('.st'), 650); await S.click(); setStatus(k, 'done'); await S.sleep(300); }
+  await S.go(row('2.1').querySelector('.st'), 650); await S.click(); setStatus('2.1', 'work'); await S.sleep(200);
+  setNow(P.today); requestAnimationFrame(() => doneTo(P.today)); S.hideCur(); await S.sleep(2400);
+  S.caption('3', 'Задержка видна сразу, план сдвигается');
+  delay(true); await S.sleep(600); shift(true); await S.sleep(2600);
+  S.hideCap(); await S.sleep(600);
+}, () => {
+  S.$$('.bar').forEach(b => b.classList.remove('pre'));
+  works.forEach(w => setStatus(id(w), w.st)); setNow(P.today, true); doneTo(P.today); shift(true, true); delay(true);
+});
+})();
+</script>
+</body>
+</html>

@@ -3,80 +3,124 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Петрович.BRO: смета за пару кликов (демо)</title>
+<title>Смета за пару кликов</title>
+<link rel="stylesheet" href="bro-ui.css">
 <style>
-:root{--ink:#262A3B;--yel:#FFCC33}
-*{box-sizing:border-box;margin:0}
-body{font-family:"SF Pro Display",Inter,system-ui,sans-serif;background:#F8F5F0;display:grid;place-items:center;min-height:100vh;padding:24px}
-/* Сцена в координатах макета 1440x1024, масштабируется скриптом */
-.wrap{width:min(1100px,100%);aspect-ratio:1440/1024;position:relative;border-radius:20px;overflow:hidden;box-shadow:0 24px 64px rgba(80,50,0,.18);background:#fff}
-.stage{position:absolute;left:0;top:0;width:1440px;height:1024px;transform-origin:0 0}
-.shot{position:absolute;inset:0;width:1440px;height:1024px;opacity:0;transition:opacity .35s ease-out}
-.shot.on{opacity:1}
-.hl{position:absolute;border:3px solid var(--yel);border-radius:10px;background:rgba(255,204,51,.18);opacity:0;transition:opacity .2s}
-.hl.on{opacity:1}
-.cur{position:absolute;left:0;top:0;width:34px;height:34px;z-index:9;pointer-events:none;opacity:0;transition:transform .9s cubic-bezier(.3,.7,.2,1),opacity .25s;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35))}
-.cur.on{opacity:1}
-.ring{position:absolute;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(255,204,51,.6);z-index:8;opacity:0;pointer-events:none}
-.ring.go{animation:rg .45s ease-out}
-@keyframes rg{0%{opacity:.95;transform:scale(.3)}100%{opacity:0;transform:scale(1.3)}}
-.cap{position:absolute;left:50%;top:28px;transform:translate(-50%,-12px);background:var(--ink);color:#fff;border-radius:100px;padding:14px 28px;font-size:26px;font-weight:500;letter-spacing:-.01em;opacity:0;transition:opacity .3s ease-out,transform .3s ease-out;white-space:nowrap;z-index:10}
-.cap.on{opacity:1;transform:translate(-50%,0)}
-@media (prefers-reduced-motion:reduce){.cur,.ring,.cap{display:none}}
+body{background:#F8F5F0;display:grid;place-items:center;min-height:100vh;padding:24px;margin:0}
+.est-card .tbl .row,.est-card .tbl .sub{transition:opacity .35s ease-out}
+.est-card.pre .tbl .row,.est-card.pre .tbl .sub{opacity:0}
 </style>
 </head>
 <body>
-<div class="wrap" id="wrap">
-  <div class="stage" id="st">
-    <img class="shot" id="s_create" src="img/create_obj.jpg" alt="">
-    <img class="shot" id="s_est" src="img/add_est.jpg" alt="">
-    <img class="shot" id="s_tpl" src="img/add_tpl.jpg" alt="">
-    <img class="shot" id="s_res" src="img/estimate.jpg" alt="">
-    <img class="shot" id="s_dl" src="img/download.jpg" alt="">
-    <div class="hl" id="hl"></div>
-    <svg class="cur" id="cur" viewBox="0 0 24 24"><path d="M4 2l16 9-7 2-3 7z" fill="#262A3B" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>
-    <div class="ring" id="ring"></div>
-    <div class="cap" id="cap"></div>
-  </div>
-</div>
+<div class="wrap" id="wrap"><div class="stage" id="st"></div></div>
+<script src="data.js"></script>
+<script src="bro-ui.js"></script>
 <script>
-(()=>{
-const $=s=>document.querySelector(s);
-const wrap=$('#wrap'),st=$('#st'),cur=$('#cur'),ring=$('#ring'),hl=$('#hl'),cap=$('#cap');
-const shots={create:$('#s_create'),est:$('#s_est'),tpl:$('#s_tpl'),res:$('#s_res'),dl:$('#s_dl')};
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-let run=0,visible=true;
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-function fit(){st.style.transform=`scale(${wrap.clientWidth/1440})`}
-addEventListener('resize',fit);fit();
-function show(k){for(const n in shots)shots[n].classList.toggle('on',n===k)}
-let cx=1300,cy=980;
-async function move(x,y,ms=950){cx=x;cy=y;cur.style.transform=`translate(${x}px,${y}px)`;await sleep(ms)}
-async function click(){ring.style.left=cx+'px';ring.style.top=cy+'px';ring.classList.remove('go');void ring.offsetWidth;ring.classList.add('go');await sleep(220)}
-function caption(t){cap.classList.remove('on');setTimeout(()=>{cap.textContent=t;cap.classList.add('on')},180)}
-function mark(x,y,w,h){hl.style.cssText=`left:${x}px;top:${y}px;width:${w}px;height:${h}px`;hl.classList.add('on')}
-function unmark(){hl.classList.remove('on')}
-async function loop(id){
-  while(id===run){
-    show('create');unmark();cap.classList.remove('on');
-    cur.style.transition='none';cur.style.transform=`translate(1300px,980px)`;cx=1300;cy=980;void cur.offsetWidth;cur.style.transition='';cur.classList.add('on');
-    await sleep(500);
-    caption('1. Создайте смету в объекте');
-    await move(850,544);await click();show('est');await sleep(700);
-    caption('2. Выберите шаблон');
-    await move(850,684);await click();show('tpl');await sleep(700);
-    await move(760,819);mark(486,804,728,32);await click();await sleep(500);
-    caption('3. Смета готова');
-    await move(1045,1008);unmark();await click();show('res');await sleep(1800);
-    caption('4. Поделитесь или скачайте');
-    await move(1347,310);await click();show('dl');await sleep(900);
-    await move(888,636);await click();await sleep(1300);
-    cap.classList.remove('on');cur.classList.remove('on');await sleep(700);
-    while(!visible&&id===run)await sleep(300);
-  }
+(() => {
+const B = BRO, U = UI, I = U.I, st = document.getElementById('st');
+
+/* Экран 1. Создание объекта и сметы (макет 2739:21933) */
+const create = U.shell({ active: 'all', obj: true, objNew: true, est: true }, `
+  <div class="create">
+    <h1>Создание</h1>
+    <div class="card">
+      <h2>${I.bld.replace(/18/g, 26)}Объект</h2>
+      <div class="g2">
+        <div><div class="lbl">Название объекта <i>*</i></div><div class="fld" id="fName"><span class="ph">Введите название</span></div></div>
+        <div><div class="lbl">Город поставки товара <i>*</i> ${I.info}</div><div class="fld">${B.object.city}<span class="dd">${I.tri}</span></div></div>
+        <div><div class="lbl">Клиент</div><div class="fld" id="fClient"><span class="ph">Выберите</span><span class="dd">${I.tri}</span></div></div>
+        <div><div class="lbl">Адрес объекта</div><div style="display:flex;gap:8px"><div class="fld" id="fAddr" style="flex:1"><span class="ph">Добавить адрес</span></div><span class="btn y" style="width:36px;padding:0">${I.pin}</span></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2 style="justify-content:space-between"><span style="display:flex;gap:8px;align-items:center">${I.table.replace(/18/g, 26)}Смета</span><u style="font-size:12px;font-weight:400;color:#4A56A0">Не добавлять смету к объекту</u></h2>
+      <div class="lbl">Название сметы <i>*</i></div><div class="fld" id="fEst"><span class="ph">Введите название</span></div>
+      <div class="opts">
+        <div class="opt" id="oEmpty"><span class="rad"></span><div><b>Смета пустая</b>Вносите позиции сметы вручную через BRO</div></div>
+        <div class="opt" id="oTpl"><span class="rad y"></span><div><b>Смета из шаблона</b>Выберите готовый или системный шаблон</div></div>
+        <div class="opt"><span class="rad"></span><div><b>Смета из файла</b>Заполните смету в Excel по образцу</div></div>
+      </div>
+      <div class="tplbox" id="tplbox">
+        <div class="seg"><span class="on">${I.tpl}Системные шаблоны</span><span>${I.tpl}Мои шаблоны</span></div>
+        ${B.templates.map((t, i) => `<div class="tpl" ${i === 0 ? 'id="tpl0"' : ''}>${t}${i === 0 ? `<span class="tag">${B.sections.reduce((a, s) => a + s.items.length, 0)} позиций</span>` : ''}</div>`).join('')}
+      </div>
+    </div>
+    <div class="card foot"><span class="btn lg">${I.arrowL}Отменить</span><span class="btn lg y" id="bCreate">${I.check}Создать смету и объект</span></div>
+  </div>`);
+
+/* Экран 2. Смета «Ремонт ванной» (макет 3177:49791) */
+const estimate = U.shell({ active: 'est', obj: true, est: true }, `
+  ${U.crumbs('Объекты', B.object.name, B.estimate.name)}
+  ${U.estHead()}
+  <div class="card est est-card pre" id="estCard">
+    <div class="est-h"><h2>Смета на сумму: <span id="total">0,00</span></h2><span class="btn">${I.share}Поделиться</span><span class="btn" id="bDl">${I.dl}Скачать</span></div>
+    ${U.estTable('pro', { collapsed: true, open: [0, 1, 2] })}
+  </div>
+  <div class="ov" id="ov"></div>
+  <div class="modal bro" id="modal">
+    <h3>Скачать смету ${I.x}</h3>
+    <div class="box"><h4>Формат</h4><div style="display:flex;gap:24px;align-items:center"><span style="display:flex;gap:8px;align-items:center"><span class="rad on"></span>PDF ${I.pdf}</span><span style="display:flex;gap:8px;align-items:center"><span class="rad"></span>Excel ${I.xls}</span></div></div>
+    <div class="box"><h4>Колонтитулы</h4><div class="g2"><div><div class="lbl">Верхний колонтитул</div><div class="fld">${B.company}<span class="dd">${I.tri}</span></div></div><div><div class="lbl">Нижний колонтитул</div><div class="fld">Контакты мастера<span class="dd">${I.tri}</span></div></div></div></div>
+    <div style="display:flex;justify-content:flex-end;gap:12px"><span class="btn lg">Отменить</span><span class="btn lg y" id="bDo">Скачать смету</span></div>
+  </div>
+  <div class="toast bro" id="toast">${I.pdf}Ремонт ванной.pdf скачан</div>`);
+
+st.innerHTML = `<div class="scr" id="sCreate">${create}</div><div class="scr" id="sEst">${estimate}</div>`;
+const S = U.scene(document.getElementById('wrap'));
+const $ = S.$, show = id => S.$$('.scr').forEach(n => n.classList.toggle('on', n.id === id));
+const total = B.totals.total;
+
+function reset() {
+  ['fName', 'fAddr', 'fEst'].forEach(id => $('#' + id).innerHTML = '<span class="ph">' + (id === 'fAddr' ? 'Добавить адрес' : 'Введите название') + '</span>');
+  $('#fClient').innerHTML = `<span class="ph">Выберите</span><span class="dd">${I.tri}</span>`;
+  S.$$('.fld').forEach(n => n.classList.remove('focus'));
+  $('#oTpl').classList.remove('on'); $('#oTpl .rad').classList.remove('on');
+  $('#tplbox').classList.remove('in'); $('#tpl0').classList.remove('on');
+  $('#estCard').classList.add('pre'); $('#total').textContent = '0,00';
+  $('#ov').classList.remove('on'); $('#modal').classList.remove('on'); $('#toast').classList.remove('on');
 }
-if(reduce){show('res')}else{run=Date.now();loop(run)}
-new IntersectionObserver(e=>{visible=e[0].isIntersecting},{threshold:.2}).observe(wrap);
+function filled() {
+  $('#fName').textContent = B.object.name; $('#fAddr').textContent = 'ул. Пушкинская, 12, кв. 8';
+  $('#fClient').innerHTML = `${B.client.name}<span class="dd">${I.tri}</span>`; $('#fEst').textContent = B.estimate.name;
+  $('#oTpl').classList.add('on'); $('#oTpl .rad').classList.add('on'); $('#tplbox').classList.add('in'); $('#tpl0').classList.add('on');
+}
+async function revealEstimate() {
+  const rows = S.$$('#estCard .tbl .row, #estCard .tbl .sub');
+  rows.forEach(r => r.style.opacity = 0); $('#estCard').classList.remove('pre');
+  rows.forEach((r, i) => setTimeout(() => r.style.opacity = '', 120 + i * 55));
+  const t0 = performance.now(), dur = 1300;
+  await new Promise(res => { (function tick(t) { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); $('#total').textContent = B.fmt(Math.round(total * e)); k < 1 ? requestAnimationFrame(tick) : res(); })(t0); });
+  $('#total').textContent = B.fmt(total);
+}
+async function field(id, text) { const f = $('#' + id); await S.go(f, 700, -120); await S.click(); f.classList.add('focus'); f.innerHTML = '<span></span><span class="caret"></span>'; await S.type(f.firstChild, text); f.classList.remove('focus'); f.textContent = text; }
+
+S.run(async () => {
+  reset(); show('sCreate'); S.jump(1300, 980); $('#sbObj').classList.remove('in');
+  await S.sleep(500);
+  S.caption('1', 'Создайте объект');
+  await field('fName', B.object.name);
+  await S.go('#fClient', 600, -100); await S.click(); $('#fClient').innerHTML = `${B.client.name}<span class="dd">${I.tri}</span>`; await S.sleep(250);
+  await field('fAddr', 'ул. Пушкинская, 12, кв. 8');
+  await field('fEst', B.estimate.name);
+  S.caption('2', 'Выберите шаблон');
+  await S.go('#oTpl', 700, -60); await S.click(); $('#oTpl').classList.add('on'); $('#oTpl .rad').classList.add('on'); $('#tplbox').classList.add('in');
+  await S.sleep(650);
+  await S.go('#tpl0', 700, -140); await S.click(); $('#tpl0').classList.add('on'); await S.sleep(500);
+  await S.go('#bCreate', 800); await S.click(); await S.sleep(200);
+  S.caption('3', 'Смета готова, цены Петровича внутри');
+  show('sEst'); $('#sbObj').classList.add('in');
+  await revealEstimate(); await S.sleep(1300);
+  S.caption('4', 'Скачайте PDF для заказчика');
+  await S.go('#bDl', 900); await S.click(); $('#ov').classList.add('on'); $('#modal').classList.add('on'); await S.sleep(900);
+  await S.go('#bDo', 800); await S.click(); $('#ov').classList.remove('on'); $('#modal').classList.remove('on');
+  await S.sleep(250); $('#toast').classList.add('on'); await S.sleep(1800);
+  S.hideCap(); S.hideCur(); await S.sleep(700);
+}, n => {
+  // Статичные состояния: 0 смета, 1 выбор шаблона, 2 скачивание
+  if (n === 1) { reset(); filled(); show('sCreate'); return; }
+  show('sEst'); $('#sbObj').classList.add('in'); $('#estCard').classList.remove('pre'); $('#total').textContent = B.fmt(total);
+  if (n === 2) { $('#ov').classList.add('on'); $('#modal').classList.add('on'); }
+});
 })();
 </script>
 </body>
