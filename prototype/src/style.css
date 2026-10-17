@@ -35,17 +35,21 @@ img{display:block}
 .btn.white{background:#fff}.btn.white:hover{background:#fff}
 .btn.navy{background:#1A295C;color:#fff}.btn.navy:hover{background:#22357A}
 .btn.l{height:64px;min-width:279px;font-size:18px;font-weight:600}
-.link{display:inline-flex;align-items:center;gap:8px;font-size:16px;line-height:22px;font-weight:500;transition:gap .2s}
-.link:hover{gap:12px}
-.link svg{width:18px;height:18px}
+
+/* Полосы на всю ширину окна: контент в сетке 1920, фон тянется до краёв (ультраширокие экраны) */
+.bleed{clip-path:inset(0 -100vmax)}
+.promo.bleed{box-shadow:0 0 0 100vmax var(--ink)}
+.hdr.bleed{box-shadow:0 0 0 100vmax #fff}
+.pain.bleed,.revs.bleed{box-shadow:0 0 0 100vmax var(--beige)}
+.ftr.bleed{box-shadow:0 0 0 100vmax var(--ink)}
 
 /* Промо-полоса и шапка */
 .promo{height:44px;background:var(--ink);display:flex;align-items:center;justify-content:center;gap:12px;color:#fff;cursor:pointer}
 .promo .tag{background:var(--yel);color:var(--ink);border-radius:100px;padding:3px 10px;font-size:14px;line-height:18px;font-weight:500}
 .promo span:last-child{font-size:16px;line-height:22px;font-weight:500}
 .promo:hover span:last-child{text-decoration:underline;text-underline-offset:3px}
-.hdr{position:sticky;top:0;z-index:50;height:88px;padding:20px 96px;display:flex;align-items:center;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(14px);transition:box-shadow .3s}
-.hdr.sc{box-shadow:0 1px 0 var(--ink15),0 8px 24px rgba(38,42,59,.06)}
+.hdr{position:sticky;top:0;z-index:50;height:88px;padding:20px 96px;display:flex;align-items:center;background:#fff;transition:box-shadow .3s}
+.hdr.sc{box-shadow:0 0 0 100vmax #fff,0 1px 0 100vmax var(--ink15),0 8px 24px 100vmax rgba(38,42,59,.06)!important;clip-path:inset(0 -100vmax -40px)!important}
 .hdr .logo{width:165px;flex:none}
 .hdr nav{margin:0 auto;display:flex;gap:36px;padding-left:157px}
 .hdr nav a{font-size:16px;line-height:22px;font-weight:500;position:relative;padding:4px 0}
@@ -125,7 +129,6 @@ img{display:block}
 .prod .desc{display:flex;flex-direction:column;gap:20px}
 .rev{width:400px;background:#fff;border-radius:16px;padding:22px 24px;display:flex;flex-direction:column;gap:14px}
 .rev .src{display:flex;justify-content:space-between;font-size:16px;line-height:22px;font-weight:500}
-.rev .src i{font-style:normal;color:var(--ink35)}
 .rev p{font-size:16px;line-height:22px}
 .rev small{font-size:14px;line-height:18px;font-weight:500;color:var(--ink50)}
 .prod .box{width:1076px;flex:none;display:flex;flex-direction:column}
