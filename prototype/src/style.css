@@ -61,7 +61,7 @@ img{display:block}
 /* При прокрутке текст hero стоит на месте, жёлтая панель наезжает на него (только на десктопе) */
 @media (min-width:1024px){
   .hero .txt{position:sticky;top:185px;z-index:0}
-  .hero .panel{z-index:1;box-shadow:0 -14px 32px -14px rgba(102,64,0,.14)}
+  .hero .panel{z-index:1}
 }
 .win{position:absolute;left:244px;top:72px;width:1240px;height:750px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(102,64,0,.18)}
 .win img{width:100%;height:auto}
@@ -220,8 +220,8 @@ img{display:block}
 .seo.open button svg{transform:rotate(180deg)}
 .ftr{background:var(--ink);height:196px;padding:0 272px;display:flex;align-items:center;justify-content:space-between;color:#fff}
 .ftr .mail{font-size:28px;line-height:34px;font-weight:600}
-.ftr .stores a{width:128px;height:44px;background:#fff;border-radius:8px;display:grid;place-items:center}
-.ftr .stores img{width:118px;height:auto}
+.ftr .stores a{width:128px;height:44px;border-radius:8px;display:block}
+.ftr .stores img{width:128px;height:44px}
 .ftr .copy{font-size:18px;line-height:23px;font-weight:500}
 
 /* Модальное окно регистрации и тост */

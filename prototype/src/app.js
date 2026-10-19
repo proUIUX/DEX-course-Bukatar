@@ -20,10 +20,10 @@ const navIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersect
 Object.keys(navMap).forEach(id => { const el = document.getElementById(id); if (el) navIO.observe(el); });
 
 /* Появление блоков */
-const rvIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rvIO.unobserve(e.target); } }), { threshold: .12 });
+const rvIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rvIO.unobserve(e.target); } }), { threshold: .12, rootMargin: '0px 0px -14% 0px' });
 $$('.rv, .app .pop').forEach(el => rvIO.observe(el));
 // Подстраховка при очень быстрой прокрутке: показываем всё, что уже выше нижнего края окна
-let rvT; addEventListener('scroll', () => { clearTimeout(rvT); rvT = setTimeout(() => $$('.rv:not(.in), .app .pop:not(.in)').forEach(el => { if (el.getBoundingClientRect().top < innerHeight) el.classList.add('in'); }), 120); }, { passive: true });
+let rvT; addEventListener('scroll', () => { clearTimeout(rvT); rvT = setTimeout(() => $$('.rv:not(.in), .app .pop:not(.in)').forEach(el => { if (el.getBoundingClientRect().top < innerHeight * .86) el.classList.add('in'); }), 120); }, { passive: true });
 
 /* Сцены интерфейса: каждая живёт в iframe (srcdoc), параметры передаются через window.__Q */
 let frameSeq = 0;
@@ -55,7 +55,7 @@ $('#invite').addEventListener('click', async () => {
 new IntersectionObserver((es, o) => es.forEach(async e => {
   if (!e.isIntersecting) return; o.disconnect();
   for (const c of $$('.bc', e.target)) { c.classList.add('in'); await sleep(reduce ? 0 : 220); }
-}), { threshold: .2 }).observe($('#pairs'));
+}), { threshold: .2, rootMargin: '0px 0px -14% 0px' }).observe($('#pairs'));
 
 /* Карточки возможностей: вкладки с автопереключением, под каждой своя сцена */
 const W = 'white', Y = 'ylw';
@@ -133,7 +133,7 @@ $$('.prod').forEach(card => {
   new IntersectionObserver(es => es.forEach(e => {
     visible = e.isIntersecting;
     if (visible && cur < 0) activate(0);
-  }), { threshold: .35, rootMargin: '200px 0px 0px 0px' }).observe(card);
+  }), { threshold: .35, rootMargin: '200px 0px -15% 0px' }).observe(card);
   controllers[key] = { activate: i => activate(i, true), card };
 });
 
@@ -149,7 +149,7 @@ $$('[data-go]').forEach(b => b.addEventListener('click', ev => {
 new IntersectionObserver((es, o) => es.forEach(async e => {
   if (!e.isIntersecting) return; o.disconnect();
   for (const r of $$('.tr:not(.th)', e.target)) { r.classList.add('in'); const s = $('.v span', r); s.classList.add('hl'); await sleep(reduce ? 0 : 220); setTimeout(() => s.classList.remove('hl'), 500); }
-}), { threshold: .4 }).observe($('#cmp'));
+}), { threshold: .4, rootMargin: '0px 0px -12% 0px' }).observe($('#cmp'));
 
 /* SEO-текст */
 $('#seoBtn').addEventListener('click', () => { const s = $('#seo'); s.classList.toggle('open'); $('#seoBtn span').textContent = s.classList.contains('open') ? 'Свернуть' : 'Показать полностью'; });
