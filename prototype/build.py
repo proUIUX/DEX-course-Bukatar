@@ -41,6 +41,9 @@ ICONS = {
     'usercircle': '<svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path></svg>',
     'building': svg('<path d="M4 21V5.5L13 3v18M13 8.5l7 2V21M2.5 21h19M7 8h3M7 11.5h3M7 15h3M16 13.5h1.5M16 17h1.5"/>', 22, 1.6),
 }
+# иконки кита «UI-kit BRO App» (h-icon/outline/*), выгружены из макета: prototype/assets/icons/<имя>.svg, в разметке {{i:ic_<имя с подчёркиваниями>}}
+for _f in sorted((ASSETS / 'icons').glob('*.svg')):
+    ICONS['ic_' + _f.stem.replace('-', '_')] = _f.read_text(encoding='utf-8').strip()
 CURSOR = '<svg width="14" height="15" viewBox="0 0 14 15"><path d="M1 1l11.5 6.3-5.3 1.4L4.4 14z" fill="#262A3B" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>'
 CMP = ['Смета из шаблона за пару кликов', 'Цены из каталога Петровича', 'План-график и задержки', 'Финансы по каждому объекту', 'Работа с телефона']
 
