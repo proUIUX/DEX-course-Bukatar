@@ -13,8 +13,6 @@
 <body>
 <div class="page" id="top">
 
-<a class="promo bleed" href="#app"><span class="tag">Приложение</span><span>Приложение BRO для iOS и Android: объекты и сметы всегда под рукой</span></a>
-
 <header class="hdr bleed" id="hdr">
   <a class="logo" href="#top" aria-label="Петрович.BRO">{{logo}}</a>
   <nav>
@@ -39,16 +37,15 @@
 </section>
 
 <section class="who" id="who">
-  <p class="t16 m c50 center rv">Для тех, кто ведёт ремонт, и для тех, кто его заказывает</p>
+  <h3 class="h3 center rv">Для тех, кто ведёт ремонт, и для тех, кто его заказывает</h3>
   <div class="groups">
     <div class="grp pro rv">
-      <div class="gh"><div><h3 class="h4">Профессионалам</h3><p class="t16 c66">Сметы, сроки, деньги и команда в одном сервисе</p></div><div class="ills"><img src="{{img:who1}}" alt=""><img src="{{img:who2}}" alt=""><img src="{{img:who3}}" alt=""></div></div>
+      <div class="gh"><div><h3 class="h4">Профессионалам</h3><p class="body c66">Сметы, сроки, деньги и команда в одном сервисе</p></div></div>
       <div class="roles"><button class="role" data-go="smeta:0"><span class="ic">{{i:wrench}}</span>Частные мастера</button><button class="role" data-go="plan:0"><span class="ic">{{i:users}}</span>Бригадиры и прорабы</button><button class="role" data-go="plan:1"><span class="ic">{{i:building}}</span>Руководители компаний</button><button class="role" data-go="smeta:3"><span class="ic">{{i:calc}}</span>Сметчики</button><button class="role" data-go="smeta:0"><span class="ic">{{i:pencil}}</span>Архитекторы и дизайнеры</button><button class="role" data-go="client:0"><span class="ic">{{i:chat}}</span>Все, кто организует ремонт</button></div>
     </div>
     <div class="grp cli rv" style="transition-delay:.08s">
-      <div class="gh"><h3 class="h4">Заказчикам ремонта</h3><img src="{{img:who4}}" alt=""></div>
-      <p class="body c66">Следите за ремонтом онлайн: смета, сроки, расходы и документы. Бесплатно</p>
-      <div><button class="btn l white" id="invite">Предложить BRO бригаде</button><p class="cap c50" style="margin-top:10px">Скопируем готовое сообщение со ссылкой на сервис</p></div>
+      <div><h3 class="h4">Заказчикам ремонта</h3><p class="body c66">Следите за ремонтом онлайн: смета, сроки, расходы и документы. Бесплатно</p></div>
+      <div><button class="btn l white nm" id="invite">Предложить BRO бригаде</button><p class="cap ink" style="margin-top:10px">Скопируем готовое сообщение со ссылкой на сервис</p></div>
     </div>
   </div>
 </section>
@@ -56,7 +53,7 @@
 <section class="pain bleed" id="pain">
   <h2 class="h2 rv">Ремонт тормозит не работа, а рутина</h2>
   <p class="lead rv">Сметы по вечерам, цены вручную, звонки заказчика.<br>С Петрович.BRO рутина делается сама</p>
-  <div class="bento" id="pairs"><a href="#features" class="bc" data-go="smeta:0"><div class="bt"><div class="au"><span class="av dk">А</span>Алексей, мастер</div><div class="bubble"><p>«Заказчику нужна цена сегодня, а на смету уходит весь вечер»</p></div><div class="wn"><div class="was"><small>Было</small><s>Смета с нуля</s></div><div class="now"><span class="ar">{{i:arrow}}</span><b>Смета из шаблона</b></div></div></div><div class="shot"><img src="{{img:bento_tpl}}" alt="Выбор шаблона сметы"></div></a><a href="#features" class="bc" data-go="plan:0"><div class="bt"><div class="au"><span class="av dk">С</span>Сергей, прораб</div><div class="bubble"><p>«Кто завтра на объекте и что пора докупить?»</p></div><div class="wn"><div class="was"><small>Было</small><s>График в голове</s></div><div class="now"><span class="ar">{{i:arrow}}</span><b>План-график со статусами</b></div></div></div><div class="shot"><img src="{{img:bento_plan}}" alt="План-график с задержкой"></div></a><a href="#features" class="bc" data-go="plan:1"><div class="bt"><div class="au"><span class="av dk">А</span>Алексей, мастер</div><div class="bubble"><p>«Заказчик заплатил всё или нет? Я вообще в плюсе?»</p></div><div class="wn"><div class="was"><small>Было</small><s>Расчёты в блокноте</s></div><div class="now"><span class="ar">{{i:arrow}}</span><b>Оплаты и прибыль по объекту</b></div></div></div><div class="shot"><img src="{{img:bento_fin}}" alt="Финансы: выручка и прибыль"></div></a><a href="#features" class="bc" data-go="client:0"><div class="bt"><div class="au"><span class="av bl">И</span>Ирина, заказчик</div><div class="bubble"><p>«Что там с ремонтом? Когда закончите?»</p></div><div class="wn"><div class="was"><small>Было</small><s>Звонки мастеру</s></div><div class="now"><span class="ar">{{i:arrow}}</span><b>Заказчик смотрит сам</b></div></div></div><div class="shot shotp"><div class="phone2"><img src="{{img:bento_phone}}" alt="Экран объекта в приложении: события и статусы"></div></div></a></div>
+  <div class="bento" id="pairs"><a href="#features" class="bc" data-go="smeta:0"><div class="bt"><div class="au"><span class="av dk">А</span>Алексей, мастер</div><div class="bubble"><p>«Заказчику нужна цена сегодня, а на смету уходит весь вечер»</p></div><div class="wn"><small>С Петрович.BRO</small><b>Смета из шаблона</b></div></div><div class="shot"><img src="{{img:bento_tpl}}" alt="Выбор шаблона сметы"></div></a><a href="#features" class="bc" data-go="plan:0"><div class="bt"><div class="au"><span class="av dk">С</span>Сергей, прораб</div><div class="bubble"><p>«Кто завтра на объекте и что пора докупить?»</p></div><div class="wn"><small>С Петрович.BRO</small><b>План-график со статусами</b></div></div><div class="shot"><img src="{{img:bento_plan}}" alt="План-график с задержкой"></div></a><a href="#features" class="bc" data-go="plan:1"><div class="bt"><div class="au"><span class="av dk">А</span>Алексей, мастер</div><div class="bubble"><p>«Заказчик заплатил всё или нет? Я вообще в плюсе?»</p></div><div class="wn"><small>С Петрович.BRO</small><b>Оплаты и прибыль по объекту</b></div></div><div class="shot"><img src="{{img:bento_fin}}" alt="Финансы: выручка и прибыль"></div></a><a href="#features" class="bc" data-go="client:0"><div class="bt"><div class="au"><span class="av bl">И</span>Ирина, заказчик</div><div class="bubble"><p>«Что там с ремонтом? Когда закончите?»</p></div><div class="wn"><small>С Петрович.BRO</small><b>Заказчик смотрит сам</b></div></div><div class="shot shotp"><div class="phone2"><img src="{{img:bento_phone}}" alt="Экран объекта в приложении: события и статусы"></div></div></a></div>
 </section>
 
 <section class="feat" id="features">
@@ -86,23 +83,23 @@
     <div class="box"><div class="pnl"></div><div class="tabs"></div></div>
   </article>
 
-  <article class="app rv" id="app">
-    <div class="txt"><h3 class="h3">Объекты с телефона</h3><p class="lead">Сметы, замеры, план-график и финансы всегда под рукой. Заказчик тоже следит с телефона</p></div>
-    <div class="dl">
-      <div class="qr"><img src="{{img:qr}}" alt="QR-код для скачивания приложения"><div class="t16"><b class="m">Наведите камеру,</b><br><span class="c66">чтобы скачать</span></div></div>
-      <div class="stores"><a href="#" data-toast="Откроется Google Play"><img src="{{img:gp}}" alt="Google Play"></a><a href="#" data-toast="Откроется App Store"><img src="{{img:as}}" alt="App Store"></a></div>
-    </div>
-    <div class="ph pop" style="left:644px;top:72px"><img src="{{img:ph1}}" alt="Объект в приложении"></div>
-    <div class="ph pop" style="left:904px;top:120px;transition-delay:.08s"><img src="{{img:ph2}}" alt="План-график в приложении"></div>
-    <div class="ph pop" style="left:1164px;top:72px;transition-delay:.16s"><img src="{{img:ph3}}" alt="Закупка материалов в приложении"></div>
-    <div class="ph pop" style="left:1424px;top:120px;transition-delay:.24s"><img src="{{img:ph4}}" alt="Вложения в приложении"></div>
-  </article>
+</section>
+<section class="app bleed" id="app">
+  <div class="txt"><h3 class="h3">Объекты с телефона</h3><p class="body c66">Сметы, замеры, план-график и финансы всегда под рукой. Заказчик тоже следит с телефона</p></div>
+  <div class="dl">
+    <div class="qr"><img src="{{img:qr}}" alt="QR-код для скачивания приложения"><div class="cap c50">Наведите камеру,<br>чтобы скачать</div></div>
+    <div class="stores"><a href="#" data-toast="Откроется Google Play"><img src="{{img:gp}}" alt="Google Play"></a><a href="#" data-toast="Откроется App Store"><img src="{{img:as}}" alt="App Store"></a></div>
+  </div>
+  <div class="ph pop" style="left:644px;top:72px"><img src="{{img:ph1}}" alt="Объект в приложении"></div>
+  <div class="ph pop" style="left:904px;top:120px;transition-delay:.08s"><img src="{{img:ph2}}" alt="План-график в приложении"></div>
+  <div class="ph pop" style="left:1164px;top:72px;transition-delay:.16s"><img src="{{img:ph3}}" alt="Закупка материалов в приложении"></div>
+  <div class="ph pop" style="left:1424px;top:120px;transition-delay:.24s"><img src="{{img:ph4}}" alt="Вложения в приложении"></div>
 </section>
 
 <section class="cmp">
   <div class="hd"><h2 class="h2 rv">Excel или Петрович.BRO?</h2><p class="lead rv">Excel привычен, но смета в нём живёт отдельно от сроков, денег и заказчика</p></div>
   <div class="tbl rv" id="cmp">
-    <div class="tr th"><span></span><span class="c50">Excel</span><span>Петрович.BRO</span></div>
+    <div class="tr th"><span></span><span class="c50">Excel</span><span class="lg">{{logo}}</span></div>
     {{cmp_rows}}
   </div>
 </section>
@@ -137,7 +134,7 @@
   </div>
 </section>
 
-<section class="ctaw" style="padding-top:0">
+<section class="ctaw">
   <div class="cta rv">
     <img class="img" src="{{img:cta}}" alt="Мастер работает со сметой на ноутбуке">
     <svg class="shape" viewBox="0 0 1245 601" preserveAspectRatio="none"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FDF7ED"/><stop offset=".5" stop-color="#FFE599"/><stop offset="1" stop-color="#FFCC38"/></linearGradient></defs><path d="M0 0H941.8L1245 248.1L1026.5 601H0Z" fill="url(#cg)" stroke="url(#cg)" stroke-width="24" stroke-linejoin="round"/></svg>

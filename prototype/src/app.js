@@ -15,7 +15,6 @@ document.addEventListener('click', e => { const a = e.target.closest('[data-toas
 
 /* Шапка: тень при прокрутке, активный пункт меню */
 const hdr = $('#hdr');
-addEventListener('scroll', () => hdr.classList.toggle('sc', scrollY > 10), { passive: true });
 const navMap = { who: 'who', features: 'features', client: 'client', app: 'app' };
 const navIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) $$('.hdr nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id)); }), { rootMargin: '-45% 0px -50% 0px' });
 Object.keys(navMap).forEach(id => { const el = document.getElementById(id); if (el) navIO.observe(el); });
