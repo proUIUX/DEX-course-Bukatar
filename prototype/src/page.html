@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Петрович.BRO: прототип лендинга</title>
-<meta name="description" content="Интерактивный прототип лендинга Петрович.BRO v4 с анимациями интерфейса">
+<meta name="description" content="Интерактивный прототип лендинга Петрович.BRO v2 с анимациями интерфейса">
 <script>window.FONT_CSS = {{font_css}}; if (window.FONT_CSS) document.write('<style>' + window.FONT_CSS + '</style>');</script>
 <style>
 {{css}}
@@ -29,9 +29,9 @@
   </div>
   <div class="panel rv" style="transition-delay:.2s">
     <div class="win"><img src="{{img:hero_window}}" alt="Смета в кабинете Петрович.BRO"></div>
-    <img class="phone pop" id="heroPhone" src="{{img:phone_client}}" alt="Объект глазами заказчика в приложении">
+    <img class="phone pop" id="heroPhone" src="{{img:hero_phone}}" alt="Главная в мобильном приложении">
     <div class="chip pop" data-hero="1" style="left:1254px;top:40px"><span class="ic" style="background:rgba(51,184,107,.15);color:#33B86B">✓</span><div><b>Смета готова</b><small>264 221 ₽, отправлена заказчику</small></div></div>
-    <div class="chip pop" data-hero="2" style="left:1204px;top:470px"><span class="ic" style="background:rgba(64,92,217,.15);color:#405CD9">{{i:eye}}</span><div><b>Заказчик открыл смету</b><small>Квартира на Пушкинской, 2 мин назад</small></div></div>
+    <img class="chipimg pop" data-hero="2" src="{{img:event_chip}}" alt="Статус сметы изменен: Новая, В работе" style="left:1274px;top:450px;width:385px">
     <div class="chip pop" data-hero="3" style="left:464px;top:690px"><span class="ic" style="background:rgba(235,87,87,.15);color:#EB5757">!</span><div><b>Задержка +2 дня</b><small>Гидроизоляция пола</small></div></div>
   </div>
 </section>
@@ -53,7 +53,7 @@
 <section class="pain bleed" id="pain">
   <h2 class="h2 rv">Ремонт тормозит не работа, а рутина</h2>
   <p class="lead rv">Сметы по вечерам, цены вручную, звонки заказчика.<br>С Петрович.BRO рутина делается сама</p>
-  <div class="bento" id="pairs"><a href="#features" class="bc" data-go="smeta:0"><div class="bt"><div class="au"><span class="av dk">А</span>Алексей, мастер</div><div class="bubble"><p>«Заказчику нужна цена сегодня, а на смету уходит весь вечер»</p></div><div class="wn"><small>С Петрович.BRO</small><b>Смета из шаблона</b></div></div><div class="shot"><img src="{{img:bento_tpl}}" alt="Выбор шаблона сметы"></div></a><a href="#features" class="bc" data-go="plan:0"><div class="bt"><div class="au"><span class="av dk">С</span>Сергей, прораб</div><div class="bubble"><p>«Кто завтра на объекте и что пора докупить?»</p></div><div class="wn"><small>С Петрович.BRO</small><b>План-график со статусами</b></div></div><div class="shot"><img src="{{img:bento_plan}}" alt="План-график с задержкой"></div></a><a href="#features" class="bc" data-go="plan:1"><div class="bt"><div class="au"><span class="av dk">А</span>Алексей, мастер</div><div class="bubble"><p>«Заказчик заплатил всё или нет? Я вообще в плюсе?»</p></div><div class="wn"><small>С Петрович.BRO</small><b>Оплаты и прибыль по объекту</b></div></div><div class="shot"><img src="{{img:bento_fin}}" alt="Финансы: выручка и прибыль"></div></a><a href="#features" class="bc" data-go="client:0"><div class="bt"><div class="au"><span class="av bl">И</span>Ирина, заказчик</div><div class="bubble"><p>«Что там с ремонтом? Когда закончите?»</p></div><div class="wn"><small>С Петрович.BRO</small><b>Заказчик смотрит сам</b></div></div><div class="shot shotp"><div class="phone2"><img src="{{img:bento_phone}}" alt="Экран объекта в приложении: события и статусы"></div></div></a></div>
+  <div class="bento" id="pairs"><div class="bc"><div class="bt"><div class="au"><span class="av dk">А</span>Алексей, мастер</div><div class="bubble"><p>«Заказчику нужна цена сегодня, а на смету уходит весь вечер»</p></div><div class="wn"><small>С Петрович.BRO</small><b>Смета из шаблона</b></div></div><div class="shot"><img src="{{img:bento_tpl}}" alt="Выбор шаблона сметы"></div></div><div class="bc"><div class="bt"><div class="au"><span class="av dk">С</span>Сергей, прораб</div><div class="bubble"><p>«Кто завтра на объекте и что пора докупить?»</p></div><div class="wn"><small>С Петрович.BRO</small><b>План-график со статусами</b></div></div><div class="shot"><img src="{{img:bento_plan}}" alt="План-график с задержкой"></div></div><div class="bc"><div class="bt"><div class="au"><span class="av dk">А</span>Алексей, мастер</div><div class="bubble"><p>«Заказчик заплатил всё или нет? Я вообще в плюсе?»</p></div><div class="wn"><small>С Петрович.BRO</small><b>Оплаты и прибыль по объекту</b></div></div><div class="shot"><img src="{{img:bento_fin}}" alt="Финансы: выручка и прибыль"></div></div><div class="bc"><div class="bt"><div class="au"><span class="av bl">И</span>Ирина, заказчик</div><div class="bubble"><p>«Что там с ремонтом? Когда закончите?»</p></div><div class="wn"><small>С Петрович.BRO</small><b>Заказчик смотрит сам</b></div></div><div class="shot shotp"><div class="phone2"><img src="{{img:bento_phone}}" alt="Экран объекта в приложении: события и статусы"></div></div></div></div>
 </section>
 
 <section class="feat" id="features">
@@ -88,7 +88,7 @@
   <div class="txt"><h3 class="h3">Объекты с телефона</h3><p class="body c66">Сметы, замеры, план-график и финансы всегда под рукой. Заказчик тоже следит с телефона</p></div>
   <div class="dl">
     <div class="qr"><img src="{{img:qr}}" alt="QR-код для скачивания приложения"><div class="cap c50">Наведите камеру,<br>чтобы скачать</div></div>
-    <div class="stores"><a href="#" data-toast="Откроется Google Play"><img src="{{img:gp}}" alt="Google Play"></a><a href="#" data-toast="Откроется App Store"><img src="{{img:as}}" alt="App Store"></a></div>
+    <div class="stores"><a href="#" data-toast="Откроется Google Play"><img src="{{img:gp_btn}}" alt="Google Play"></a><a href="#" data-toast="Откроется App Store"><img src="{{img:as_btn}}" alt="App Store"></a></div>
   </div>
   <div class="ph pop" style="left:644px;top:72px"><img src="{{img:ph1}}" alt="Объект в приложении"></div>
   <div class="ph pop" style="left:904px;top:120px;transition-delay:.08s"><img src="{{img:ph2}}" alt="План-график в приложении"></div>
@@ -101,18 +101,6 @@
   <div class="tbl rv" id="cmp">
     <div class="tr th"><span></span><span class="c50">Excel</span><span class="lg">{{logo}}</span></div>
     {{cmp_rows}}
-  </div>
-</section>
-
-<section class="more">
-  <hr>
-  <div class="grid">
-    <div class="mi rv"><span class="ic">{{i:tag}}</span><div><h4 class="h4">Цены Петровича</h4><p>Материалы из каталога Петровича</p></div></div>
-    <div class="mi rv" style="transition-delay:.06s"><span class="ic">{{i:upload}}</span><div><h4 class="h4">Импорт из Excel</h4><p>Перенесите готовые сметы и продолжайте работу в сервисе</p></div></div>
-    <div class="mi rv" style="transition-delay:.12s"><span class="ic">{{i:calc}}</span><div><h4 class="h4">Автоматическая наценка</h4><p>На всю смету или отдельно на работы и материалы</p></div></div>
-    <div class="mi rv"><span class="ic">{{i:user}}</span><div><h4 class="h4">Работа в команде</h4><p>Сотрудники и заказчик видят только свои объекты и задачи</p></div></div>
-    <div class="mi rv" style="transition-delay:.06s"><span class="ic">{{i:sparkles}}</span><div><h4 class="h4">Без ограничений</h4><p>Любое число объектов, смет и участников. Бесплатно</p></div></div>
-    <div class="mi rv" style="transition-delay:.12s"><span class="ic">{{i:building}}</span><div><h4 class="h4">Всё в карточке объекта</h4><p>Сметы, документы и данные заказчика в одном месте</p></div></div>
   </div>
 </section>
 
@@ -137,7 +125,7 @@
 <section class="ctaw">
   <div class="cta rv">
     <img class="img" src="{{img:cta}}" alt="Мастер работает со сметой на ноутбуке">
-    <svg class="shape" viewBox="0 0 1245 601" preserveAspectRatio="none"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FDF7ED"/><stop offset=".5" stop-color="#FFE599"/><stop offset="1" stop-color="#FFCC38"/></linearGradient></defs><path d="M0 0H941.8L1245 248.1L1026.5 601H0Z" fill="url(#cg)" stroke="url(#cg)" stroke-width="24" stroke-linejoin="round"/></svg>
+    <svg class="shape" viewBox="0 0 1245 601" overflow="visible"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FDF7ED"/><stop offset=".5" stop-color="#FFE599"/><stop offset="1" stop-color="#FFCC38"/></linearGradient></defs><path d="M0 0H941.81L1245 248.14L1026.47 601H0Z" fill="url(#cg)"/></svg>
     <div class="txt">
       <div style="display:flex;flex-direction:column;gap:24px"><h2 class="h3">Всё готово для старта работы<br>над проектом</h2><p class="sub">Начните работу с Петрович.BRO<br>бесплатно и без ограничений</p></div>
       <div><button class="btn navy l" data-reg="signup">Начать бесплатно</button></div>
@@ -162,31 +150,50 @@
 </footer>
 </div>
 
-<div class="mdl" id="mdl" role="dialog" aria-modal="true">
-  <div class="box">
-    <button class="x" data-close aria-label="Закрыть">{{i:x}}</button>
-    <div style="width:140px">{{logo}}</div>
-    <div class="step on" data-s="1">
-      <h3 id="mTitle">Регистрация</h3><p>Введите номер телефона, пришлём код в СМС</p>
-      <input class="inp" id="mPhone" inputmode="tel" placeholder="+7 900 000-00-00" value="">
-      <button class="btn y" id="mNext">Получить код</button>
-      <p class="fine">Продолжая, вы принимаете условия сервиса. Это прототип: данные никуда не отправляются</p>
+<div class="mdl" id="mdl" role="dialog" aria-modal="true" aria-label="Вход и регистрация">
+  <div class="auth">
+    <div class="acard">
+      <button class="aback" data-back aria-label="Назад">{{i:arrowleft}}</button>
+      <div class="alogo">{{logo}}</div>
+
+      <div class="scr on" data-scr="login">
+        <h2 class="at2">Войдите, чтобы продолжить</h2>
+        <div class="atabs" role="tablist"><button class="on" data-tab="phone" role="tab">{{i:phone}}По телефону</button><button data-tab="email" role="tab">{{i:mail}}По email</button></div>
+        <form class="aform" data-form="login-phone" novalidate>
+          <label class="fld"><span>Номер телефона*</span><input class="ainp" type="tel" inputmode="tel" placeholder="Введите номер телефона" data-mask="phone" autocomplete="off"><em class="err"></em></label>
+          <button class="abtn" type="submit">Далее</button>
+        </form>
+        <form class="aform" data-form="login-email" hidden novalidate>
+          <label class="fld"><span>E-mail*</span><input class="ainp" type="text" placeholder="Укажите почту" data-mask="email" autocomplete="off"><em class="err"></em></label>
+          <label class="fld"><span>Пароль*</span><input class="ainp" type="password" placeholder="Введите пароль" data-mask="pass" autocomplete="off"><em class="err"></em></label>
+          <button class="alink sm" type="button" data-toast="Это прототип: восстановление пароля не работает">Забыли пароль?</button>
+          <button class="abtn" type="submit">Войти</button>
+        </form>
+        <button class="alink" type="button" data-go-scr="reg">Зарегистрироваться</button>
+      </div>
+
+      <div class="scr" data-scr="reg">
+        <h1 class="at1">Регистрация</h1>
+        <p class="asub">Введите данные для регистрации</p>
+        <form class="aform" data-form="reg" novalidate>
+          <label class="fld"><span>E-mail*</span><input class="ainp" type="text" placeholder="Укажите почту" data-mask="email" autocomplete="off"><small>Пароль будет выслан на этот адрес</small><em class="err"></em></label>
+          <label class="fld"><span>Телефон*</span><input class="ainp" type="tel" inputmode="tel" placeholder="Введите номер телефона" data-mask="phone" autocomplete="off"><small>Вы сможете использовать его для входа по коду из смс</small><em class="err"></em></label>
+          <button class="abtn" type="submit">Продолжить</button>
+        </form>
+        <button class="alink" type="button" data-go-scr="login">Уже есть аккаунт</button>
+        <hr class="ahr">
+        <p class="alegal">Продолжая, вы соглашаетесь <a href="#" data-toast="Откроется пользовательское соглашение">со сбором и обработкой персональных данных и пользовательским соглашением</a>, а также на получение информационных сообщений от СТД Петрович</p>
+      </div>
     </div>
-    <div class="step" data-s="2">
-      <h3>Код из СМС</h3><p id="mSent">Отправили код на номер</p>
-      <div class="code"><input class="inp" maxlength="1"><input class="inp" maxlength="1"><input class="inp" maxlength="1"><input class="inp" maxlength="1"></div>
-      <button class="btn y" id="mCode">Подтвердить</button>
-      <p class="fine">В прототипе подойдёт любой код</p>
-    </div>
-    <div class="step" data-s="3">
-      <div class="okic">{{i:check}}</div>
-      <h3>Готово, кабинет создан</h3><p>Создайте первый объект и смету из шаблона. Пример «Квартира на Пушкинской» уже в кабинете</p>
-      <button class="btn y" data-close data-toast-after="В рабочей версии здесь откроется кабинет BRO">Перейти в кабинет</button>
+    <div class="acard acc">
+      <div class="accl">{{i:usercircle}}<span class="word">{{petr_word}}</span></div>
+      <p>Используйте ваш аккаунт «Петрович» для входа</p>
+      <p class="sm">Это единый аккаунт для «Петрович» и «Петрович.BRO»</p>
     </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<div class="proto" title="Кликабельно: кнопки, вкладки, переключатель, регистрация"><i></i>Прототип лендинга v4</div>
+<div class="proto" title="Кликабельно: кнопки, вкладки, переключатель, регистрация"><i></i>Прототип лендинга v2</div>
 
 <script>
 window.SCENES = {{scenes}};

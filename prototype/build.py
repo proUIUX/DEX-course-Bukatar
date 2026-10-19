@@ -25,11 +25,8 @@ ICONS = {
     'arrow': svg('<path d="M5 12h14M13 6l6 6-6 6"/>', 18, 1.8),
     'chev': svg('<path d="M6 9l6 6 6-6"/>', 18, 1.8),
     'x': svg('<path d="M6 6l12 12M18 6L6 18"/>', 18, 2),
-    'tag': svg('<path d="M3 12V4h8l9.5 9.5-8 8z"/><circle cx="7.5" cy="8.5" r="1.3"/>', 22, 1.6),
-    'upload': svg('<path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15M12 15V4M7.5 8.5L12 4l4.5 4.5"/>', 22, 1.6),
     'calc': svg('<rect x="5" y="2.5" width="14" height="19" rx="2"/><path d="M8.5 6.5h7v3h-7zM8.5 13h.01M12 13h.01M15.5 13h.01M8.5 16.5h.01M12 16.5h.01M15.5 16.5h.01"/>', 22, 1.6),
     'user': svg('<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>', 22, 1.6),
-    'sparkles': svg('<path d="M9.5 4l1.6 4.4L15.5 10l-4.4 1.6L9.5 16l-1.6-4.4L3.5 10l4.4-1.6zM17.5 14l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8zM17 3l.6 1.4L19 5l-1.4.6L17 7l-.6-1.4L15 5l1.4-.6z"/>', 22, 1.5),
     'wrench': svg('<path d="M14.5 6.5a4 4 0 0 0 5 5L11 20a2.1 2.1 0 0 1-3-3zM4 4l4 4M3 7l3-3"/>', 22, 1.6),
     'users': svg('<circle cx="9" cy="8" r="3.2"/><path d="M3 19.5a6 6 0 0 1 12 0M16 4.8a3.2 3.2 0 0 1 0 6.4M17.5 13.6A6 6 0 0 1 21 19.5"/>', 22, 1.6),
     'pencil': svg('<path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-4-4L4 16zM13.5 6.5l4 4"/>', 22, 1.6),
@@ -37,6 +34,11 @@ ICONS = {
     'calendar': svg('<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h2M12 14h2M16 14h.5M8 17h2"/>', 22, 1.6),
     'cash': svg('<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9.5v5M18 9.5v5"/>', 22, 1.6),
     'down': svg('<path d="M12 5v14M6 13l6 6 6-6"/>', 20, 2),
+    # иконки Heroicons со страниц входа и регистрации bro.petrovich.ru
+    'arrowleft': '<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"></path></svg>',
+    'phone': '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"></path></svg>',
+    'mail': '<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"></path></svg>',
+    'usercircle': '<svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path></svg>',
     'building': svg('<path d="M4 21V5.5L13 3v18M13 8.5l7 2V21M2.5 21h19M7 8h3M7 11.5h3M7 15h3M16 13.5h1.5M16 17h1.5"/>', 22, 1.6),
 }
 CURSOR = '<svg width="14" height="15" viewBox="0 0 14 15"><path d="M1 1l11.5 6.3-5.3 1.4L4.4 14z" fill="#262A3B" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>'
@@ -62,7 +64,7 @@ def build(fonts_dir=None):
     rep = {
         '{{css}}': (SRC / 'style.css').read_text(encoding='utf-8'),
         '{{js}}': (SRC / 'app.js').read_text(encoding='utf-8'),
-        '{{logo}}': logo(), '{{logo_white}}': logo(True), '{{cursor}}': CURSOR, '{{cmp_rows}}': rows,
+        '{{logo}}': logo(), '{{petr_word}}': (ASSETS / 'petrovich_word.svg').read_text(encoding='utf-8'), '{{logo_white}}': logo(True), '{{cursor}}': CURSOR, '{{cmp_rows}}': rows,
         '{{font_css}}': js_str(font_css),
         '{{scenes}}': '{' + ','.join(f'{json.dumps(k)}:{js_str(scenes.build(v))}' for k, v in SCENES.items()) + '}',
         '{{icons}}': json.dumps(ICONS, ensure_ascii=False),

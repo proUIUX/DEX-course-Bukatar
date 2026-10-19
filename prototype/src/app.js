@@ -1,4 +1,4 @@
-/* Прототип лендинга Петрович.BRO v4: поведение страницы */
+/* Прототип лендинга Петрович.BRO v2: поведение страницы */
 (() => {
 const $ = (q, r = document) => r.querySelector(q), $$ = (q, r = document) => [...r.querySelectorAll(q)];
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -74,7 +74,7 @@ const CARDS = {
   ],
   client: [
     { t: 'Приглашение', h: 'Приглашение в пару кликов', p: 'Отправьте заказчику приглашение. Себестоимость и наценка останутся скрыты', scene: 'client', q: 'zoom=1.25', d: 13500, chips: [[20, 120, W, 'Приглашение отправлено', 'Ирина Смирнова', 4200]] },
-    { t: 'Смета', h: 'Понятная смета', p: 'Заказчик видит позиции и итог без наценки и может сразу купить материалы в Петровиче', scene: 'client', q: 'state=0', d: 7000, chips: [[20, 150, W, 'Заказчик открыл смету', 'Ремонт ванной, только что', 500], [800, 400, Y, 'Наценку видите только вы', '', 1300]] },
+    { t: 'Смета', h: 'Понятная смета', p: 'Заказчик видит позиции и итог без наценки и может сразу купить материалы в Петровиче', scene: 'client', q: 'state=0', d: 7000, chips: [[20, 150, W, 'Статус сметы изменен', 'Новая → В работе', 500], [800, 400, Y, 'Наценку видите только вы', '', 1300]] },
     { t: 'Сроки', h: 'Сроки без звонков', p: 'Ход работ и задержки заказчик смотрит сам, в браузере или в приложении', phone: true, d: 7000, chips: [[140, 150, W, 'Задержка +2 дня', 'заказчик видит сразу', 500], [626, 360, Y, 'Ход работ онлайн', 'без звонков мастеру', 1300]] },
     { t: 'Документы', h: 'Всё в одном месте', p: 'Договор, акты и фото не потеряются в переписке', scene: 'extra', q: 'view=docs&zoom=1.25', d: 7000, chips: [] },
   ],
@@ -154,16 +154,40 @@ new IntersectionObserver((es, o) => es.forEach(async e => {
 /* SEO-текст */
 $('#seoBtn').addEventListener('click', () => { const s = $('#seo'); s.classList.toggle('open'); $('#seoBtn span').textContent = s.classList.contains('open') ? 'Свернуть' : 'Показать полностью'; });
 
-/* Регистрация (прототип, без отправки данных) */
+/* Вход и регистрация (прототип): модальное окно по макету страниц bro.petrovich.ru, данные никуда не отправляются */
 const mdl = $('#mdl');
-const step = n => $$('.step', mdl).forEach(s => s.classList.toggle('on', s.dataset.s == n));
-function openReg(kind) { $('#mTitle').textContent = kind === 'login' ? 'Вход в Петрович.BRO' : 'Регистрация'; step(1); mdl.classList.add('on'); setTimeout(() => $('#mPhone').focus(), 300); }
+const scr = n => { $$('.scr', mdl).forEach(s => s.classList.toggle('on', s.dataset.scr === n)); mdl.dataset.cur = n; };
+const closeMdl = () => mdl.classList.remove('on');
+function openReg(kind) {
+  scr(kind === 'login' ? 'login' : 'reg'); mdl.classList.add('on');
+  $$('.fld.bad', mdl).forEach(f => f.classList.remove('bad'));
+  setTimeout(() => $('.scr.on form:not([hidden]) input', mdl).focus(), 300);
+}
 $$('[data-reg]').forEach(b => b.addEventListener('click', () => openReg(b.dataset.reg)));
-mdl.addEventListener('click', e => { if (e.target === mdl || e.target.closest('[data-close]')) { const t = e.target.closest('[data-toast-after]'); mdl.classList.remove('on'); if (t) setTimeout(() => toast(t.dataset.toastAfter), 300); } });
-addEventListener('keydown', e => { if (e.key === 'Escape') mdl.classList.remove('on'); });
-const phone = $('#mPhone');
-phone.addEventListener('input', () => { let d = phone.value.replace(/\D/g, '').replace(/^[78]/, '').slice(0, 10); const p = [d.slice(0, 3), d.slice(3, 6), d.slice(6, 8), d.slice(8, 10)]; phone.value = '+7 ' + p[0] + (p[1] ? ' ' + p[1] : '') + (p[2] ? '-' + p[2] : '') + (p[3] ? '-' + p[3] : ''); });
-$('#mNext').addEventListener('click', () => { if (phone.value.replace(/\D/g, '').length < 11) { phone.value = '+7 921 456-12-08'; } $('#mSent').textContent = 'Отправили код на номер ' + phone.value; step(2); setTimeout(() => $('.code input', mdl).focus(), 50); });
-$$('.code input', mdl).forEach((inp, i, all) => inp.addEventListener('input', () => { if (inp.value && all[i + 1]) all[i + 1].focus(); }));
-$('#mCode').addEventListener('click', () => step(3));
+mdl.addEventListener('click', e => { if (e.target === mdl) closeMdl(); });
+addEventListener('keydown', e => { if (e.key === 'Escape') closeMdl(); });
+$('[data-back]', mdl).addEventListener('click', () => { if (mdl.dataset.cur === 'reg') scr('login'); else closeMdl(); });
+$$('[data-go-scr]', mdl).forEach(b => b.addEventListener('click', () => scr(b.dataset.goScr)));
+$$('.atabs button', mdl).forEach(b => b.addEventListener('click', () => {
+  $$('.atabs button', mdl).forEach(x => x.classList.toggle('on', x === b));
+  $('[data-form="login-phone"]', mdl).hidden = b.dataset.tab !== 'phone';
+  $('[data-form="login-email"]', mdl).hidden = b.dataset.tab !== 'email';
+}));
+$$('[data-mask="phone"]', mdl).forEach(inp => inp.addEventListener('input', () => {
+  const d = inp.value.replace(/\D/g, '').replace(/^[78]/, '').slice(0, 10), p = [d.slice(0, 3), d.slice(3, 6), d.slice(6, 8), d.slice(8, 10)];
+  inp.value = d ? '+7 ' + p[0] + (p[1] ? ' ' + p[1] : '') + (p[2] ? '-' + p[2] : '') + (p[3] ? '-' + p[3] : '') : '';
+}));
+const RULES = {
+  phone: [v => v.replace(/\D/g, '').length === 11, 'Введите номер телефона полностью'],
+  email: [v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()), 'Укажите почту, например name@mail.ru'],
+  pass: [v => v.length > 0, 'Введите пароль'],
+};
+$$('.aform', mdl).forEach(form => {
+  $$('.ainp', form).forEach(i => i.addEventListener('input', () => i.closest('.fld').classList.remove('bad')));
+  form.addEventListener('submit', e => {
+    e.preventDefault(); let ok = true;
+    $$('.ainp', form).forEach(i => { const [test, msg] = RULES[i.dataset.mask], f = i.closest('.fld'); const good = test(i.value); f.classList.toggle('bad', !good); $('.err', f).textContent = good ? '' : msg; ok = ok && good; });
+    if (ok) { closeMdl(); setTimeout(() => toast('Это прототип: в рабочей версии откроется следующий шаг'), 300); }
+  });
+});
 })();
