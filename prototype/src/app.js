@@ -52,11 +52,11 @@ $('#invite').addEventListener('click', async () => {
   toast('Сообщение для бригады скопировано, отправьте его мастеру');
 });
 
-/* Боль → решение: пузыри, стрелка и решение появляются по очереди */
+/* Боль → решение: карточки появляются по очереди, «было» зачёркивается, «стало» проявляется */
 new IntersectionObserver((es, o) => es.forEach(async e => {
   if (!e.isIntersecting) return; o.disconnect();
-  for (const p of $$('.pair', e.target)) { p.classList.add('in'); await sleep(reduce ? 0 : 260); }
-}), { threshold: .35 }).observe($('#pairs'));
+  for (const c of $$('.bc', e.target)) { c.classList.add('in'); await sleep(reduce ? 0 : 220); }
+}), { threshold: .2 }).observe($('#pairs'));
 
 /* Карточки возможностей: вкладки с автопереключением, под каждой своя сцена */
 const W = 'white', Y = 'ylw';
@@ -139,7 +139,8 @@ $$('.prod').forEach(card => {
 });
 
 /* «Для кого»: переход к нужной карточке и вкладке */
-$$('[data-go]').forEach(b => b.addEventListener('click', () => {
+$$('[data-go]').forEach(b => b.addEventListener('click', ev => {
+  ev.preventDefault();
   const [k, i] = b.dataset.go.split(':'), c = controllers[k];
   c.card.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
   setTimeout(() => c.activate(+i), reduce ? 0 : 500);
